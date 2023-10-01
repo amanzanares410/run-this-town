@@ -1,14 +1,28 @@
 {% load static %}
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kelly+Slab&display=swap" rel="stylesheet">
+
 <link rel='stylesheet' href= {% static 'runningApp/global_classes.css' %}>
 <link rel='stylesheet' href= {% static 'runningApp/colors.css' %}>
 <link rel='stylesheet' href= {% static 'runningApp/index.css' %}>
+<link rel='stylesheet' href= {% static 'runningApp/fonts.css' %}>
 
 <div class='full-screen flex-row background'>
     <div class='full-height flex-column fill left'>
-
+        <div class='flex-column header-text text-container fill'>
+            <span><h1 class='movement'>Run </h1><h1>This Town</h1></span>
+            <h3>Find your path, without limits</h3>
+        </div>
+        <div class='fill button-container'>
+            <button id='go-to-app-button'>Start Moving</button>
+            <button> <image src={% static 'runningApp/images/btn_google_signin_dark_normal_web.png' %}/> </button>
+        </div>
     </div>
     <div class='full-height flex-column fill right'>
-
+        {% comment "TODO" %} Replace this with lazy loading technique
+        https://letsusetech.com/optimize-image-rendering-with-lazy-loaded-images
+        {% endcomment %}
     </div>
 </div>
