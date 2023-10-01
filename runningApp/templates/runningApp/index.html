@@ -9,12 +9,33 @@
 <link rel='stylesheet' href= {% static 'runningApp/index.css' %}>
 <link rel='stylesheet' href= {% static 'runningApp/fonts.css' %}>
 
-{# Style TODO: add hover effects to buttons, animate "Run" to switch words #}
+{% comment "Citation" %}
+Title: How to loop changing text in HTML/Javascript
+URL: https://stackoverflow.com/a/44170159
+Purpose: Used a modified version of user5801980's answer to loop through words in html element text
+{% endcomment %}
+
+<script defer>
+    const words = ['Run ', 'Walk ', 'Bike ', 'Jog ', 'Run '];
+
+    cycleText(0);
+    function cycleText(i) {
+
+        if (words.length > i) {
+            setTimeout(function() {
+                document.getElementById('word-swap').innerHTML = words[i];
+                cycleText(++i);
+            }, 1000);
+
+        }
+    }
+</script>
+
 
 <div class='full-screen flex-row background'>
     <div class='full-height flex-column fill left'>
         <div class='flex-column header-text text-container fill'>
-            <span><h1 class='movement'>Run </h1><h1>This Town</h1></span>
+            <span><h1 id='word-swap' class='movement'>Run </h1><h1>This Town</h1></span>
             <h3>Find your path, without limits</h3>
         </div>
         <div class='fill button-container'>

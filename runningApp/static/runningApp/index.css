@@ -28,6 +28,7 @@ h1, h3 {
 
 .text-container {
     align-items: flex-start;
+    width: 70%;
 }
 
 .button-container {
