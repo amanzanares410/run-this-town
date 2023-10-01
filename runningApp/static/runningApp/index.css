@@ -55,3 +55,21 @@ button {
     font-weight: 400;
     line-height: normal;
 }
+
+button:hover {
+    cursor: pointer;
+}
+
+#go-to-app-button:hover {
+    border-color: var(--orange-hover);
+}
+
+#google-sign-in-button img:hover {
+    filter: brightness(75%);
+}
+
+#google-sign-in-button {
+    width: fit-content;
+    height: fit-content;
+    padding: 0%;
+}
