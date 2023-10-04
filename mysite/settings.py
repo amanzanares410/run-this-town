@@ -34,7 +34,7 @@ DEBUG = os.environ.get('DJANGO_DEBUG', 'False').lower() == 'true'
 
 
 
-ALLOWED_HOSTS = ['project-a-15-django.herokuapp.com']
+ALLOWED_HOSTS = ['localhost','project-a-15-django-3d66f46ae005.herokuapp.com/']
 
 
 # Application definition
@@ -138,10 +138,22 @@ USE_TZ = True
 #     },
 # }
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# STATIC_URL = '/static/'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# STORAGES = {
+#     "staticfiles": {
+#         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+#     },
+# }
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, 'static'),
+# )
+# WhiteNoise_Verbose = True
 
+#from example:
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 
 # Default primary key field type
@@ -152,3 +164,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 django_heroku.settings(locals())
+# django_heroku.settings(locals(), staticfiles=False )
+
+
+# config = locals()
+# config['STORAGES']['staticfiles'] = config['STATICFILES_STORAGE']
+# del config['STATICFILES_STORAGE']
