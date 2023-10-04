@@ -34,7 +34,7 @@ DEBUG = os.environ.get('DJANGO_DEBUG', 'False').lower() == 'true'
 
 
 
-ALLOWED_HOSTS = ['localhost','project-a-15-django-3d66f46ae005.herokuapp.com/']
+ALLOWED_HOSTS = ['project-a-15-django-3d66f46ae005.herokuapp.com']
 
 
 # Application definition
