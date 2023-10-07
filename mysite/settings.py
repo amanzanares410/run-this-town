@@ -21,7 +21,6 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 DEBUG = os.environ.get('DJANGO_DEBUG', 'False').lower() == 'true'
 
 
-
 ALLOWED_HOSTS = ['project-a-15-django-3d66f46ae005.herokuapp.com']
 
 
@@ -29,13 +28,13 @@ ALLOWED_HOSTS = ['project-a-15-django-3d66f46ae005.herokuapp.com']
 
 INSTALLED_APPS = [
     "runningApp",
-    "django.contrib.sites",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
