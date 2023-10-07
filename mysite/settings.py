@@ -25,7 +25,7 @@ ALLOWED_HOSTS = ['project-a-15-django-3d66f46ae005.herokuapp.com']
 
 
 # Application definition
-
+#.
 INSTALLED_APPS = [
     "runningApp",
     "django.contrib.admin",
