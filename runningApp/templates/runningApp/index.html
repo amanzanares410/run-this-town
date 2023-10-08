@@ -1,4 +1,5 @@
 {% load static %}
+{% load socialaccount %}
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -40,7 +41,7 @@ Purpose: Used a modified version of user5801980's answer to loop through words i
         </div>
         <div class='fill button-container'>
             <button id='go-to-app-button'>Start Moving</button>
-            <a id="google-sign-in-button" href="{% url 'social:begin' 'google' %}">
+            <a id="google-sign-in-button" href="{% provider_login_url 'google' %}?next=/">
                 <img src="{% static 'runningApp/images/btn_google_signin_dark_normal_web.png' %}" alt="Google Sign-In">
             </a>
             
