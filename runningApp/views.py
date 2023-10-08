@@ -14,4 +14,4 @@ def logged_in_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect("/")
+    return redirect("runningApp/index.html")
