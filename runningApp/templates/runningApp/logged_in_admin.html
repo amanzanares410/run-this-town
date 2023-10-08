@@ -1,0 +1,20 @@
+{% load static %}
+{% load socialaccount %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logged In</title>
+</head>
+<body>
+    <h1>Logged in</h1>
+    {% if user.is_authenticated %}
+    <p>Welcome to the ADMIN DASHBOARD {{ user.get_full_name }}!</p>
+    <p>Account Name: {{ user.username }}</p>
+    <a href="{% url 'logout' %}">Logout</a>
+{% endif %}
+
+</body>
+</html>
