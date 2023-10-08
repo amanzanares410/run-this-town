@@ -1,4 +1,5 @@
 {% load static %}
+{% load socialaccount %}
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,6 +32,12 @@ Purpose: Used a modified version of user5801980's answer to loop through words i
     }
 </script>
 
+{% comment "Citation" %}
+Title:User Registration in Django using Google OAuth
+URL:https://www.section.io/engineering-education/django-google-oauth/
+Purpose: Integrated some display logic into our page to verify if a user is logged in
+{% endcomment %}
+
 
 <div class='full-screen flex-row background'>
     <div class='full-height flex-column fill left'>
@@ -40,7 +47,17 @@ Purpose: Used a modified version of user5801980's answer to loop through words i
         </div>
         <div class='fill button-container'>
             <button id='go-to-app-button'>Start Moving</button>
-            <button id='google-sign-in-button'> <image src={% static 'runningApp/images/btn_google_signin_dark_normal_web.png' %}/> </button>
+           
+            <!-- authentication check and display logic -->
+            {% if user.is_authenticated %}
+                <p>Welcome, You are logged in as {{ user.username }}</p>
+            {% else %}
+                <button id='google-sign-in-button'>
+                    <a href="{% provider_login_url 'google' %}">
+                        <image src={% static 'runningApp/images/btn_google_signin_dark_normal_web.png' %}/>
+                    </a>
+                </button>
+            {% endif %}
         </div>
     </div>
     <div class='full-height flex-column fill right'>
