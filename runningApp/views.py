@@ -8,7 +8,7 @@ from django.contrib.auth import logout
 def index(request):
     return render(request=request, template_name="runningApp/index.html")
 
-#@login_required
+@login_required
 def logged_in_view(request):
     return render(request=request, template_name="runningApp/logged_in.html")
 
