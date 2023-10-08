@@ -183,7 +183,7 @@ SITE_ID = 2
 
 # LOGIN_REDIRECT_URL = '/'
 # LOGOUT_REDIRECT_URL = '/'
-LOGIN_REDIRECT_URL = 'index'#'logged_in_view'
+LOGIN_REDIRECT_URL = 'logged_in_view'
 LOGOUT_REDIRECT_URL = 'index'
 
 # above is google login, below is heroku
