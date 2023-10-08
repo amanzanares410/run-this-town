@@ -181,7 +181,7 @@ SOCIALACCOUNT_PROVIDERS = {
 
 SITE_ID = 1
 
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/logged-in/'
 LOGOUT_REDIRECT_URL = '/'
 
 # above is google login, below is heroku
