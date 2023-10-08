@@ -10,7 +10,7 @@ def index(request):
 
 #@login_required
 def logged_in_view(request):
-    return render(request=request, template_name="runningApp/index.html")
+    return render(request=request, template_name="runningApp/logged_in.html")
 
 def logout_view(request):
     logout(request)
