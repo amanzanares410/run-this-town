@@ -40,7 +40,10 @@ Purpose: Used a modified version of user5801980's answer to loop through words i
         </div>
         <div class='fill button-container'>
             <button id='go-to-app-button'>Start Moving</button>
-            <button id='google-sign-in-button'> <image src={% static 'runningApp/images/btn_google_signin_dark_normal_web.png' %}/> </button>
+            <a id="google-sign-in-button" href="{% url 'social:begin' 'google' %}">
+                <img src="{% static 'runningApp/images/btn_google_signin_dark_normal_web.png' %}" alt="Google Sign-In">
+            </a>
+            
         </div>
     </div>
     <div class='full-height flex-column fill right'>
