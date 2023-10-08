@@ -11,7 +11,7 @@
 <body>
     <h1>Logged in</h1>
     {% if user.is_authenticated %}
-    <p>Welcome, {{ user.get_full_name }}!</p>
+    <p>Welcome to the Normal User Dashboard, {{ user.get_full_name }}!</p>
     <p>Account Name: {{ user.username }}</p>
     <a href="{% url 'logout' %}">Logout</a>
 {% endif %}
