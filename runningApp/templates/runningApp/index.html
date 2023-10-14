@@ -41,9 +41,16 @@ Purpose: Used a modified version of user5801980's answer to loop through words i
         </div>
         <div class='fill button-container'>
             <button id='go-to-app-button'>Start Moving</button>
-            <a id="google-sign-in-button" href="{% provider_login_url 'google' %}?next=/">
+            {% comment %} had to switch this to post with form to bypass the ugly screen https://stackoverflow.com/a/72162783 {% endcomment %}
+            <form action="{% provider_login_url 'google' %}" method="post">
+                {% csrf_token %}
+                <button type="submit">
+                    <img src="{% static 'runningApp/images/btn_google_signin_dark_normal_web.png' %}" alt="Google Sign-In">
+                </button>
+            </form>
+            {% comment %} <a id="google-sign-in-button" href="{% provider_login_url 'google' %}?next=/">
                 <img src="{% static 'runningApp/images/btn_google_signin_dark_normal_web.png' %}" alt="Google Sign-In">
-            </a>
+            </a> {% endcomment %}
             
         </div>
     </div>
