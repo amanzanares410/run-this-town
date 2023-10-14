@@ -9,7 +9,7 @@ from django.contrib.auth.models import Group
 def index(request):
     return render(request=request, template_name="runningApp/index.html")
 
-#@login_required
+@login_required
 def logged_in_view(request):
       # Check if the user's email is 'cs3240.super@gmail.com'
     if request.user.email == 'cs3240.super@gmail.com':
