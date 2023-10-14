@@ -196,3 +196,11 @@ django_heroku.settings(locals())
 # config = locals()
 # config['STORAGES']['staticfiles'] = config['STATICFILES_STORAGE']
 # del config['STATICFILES_STORAGE']
+
+# Override production variables if DJANGO_DEVELOPMENT env variable is true
+if os.getenv('DJANGO_DEVELOPMENT') == 'true':
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    import sys
+    sys.path.insert(0, os.path.join(BASE_DIR, 'mysite'))
+    from settings_dev import *  # or specific overrides
+    print("Using development settings")
