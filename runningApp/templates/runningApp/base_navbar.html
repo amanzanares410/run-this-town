@@ -1,8 +1,22 @@
 {% extends "./base.html" %}
 
+{% block head %}
+    {% load socialaccount %}
+    {% load static %}
+    <link rel='stylesheet' href= {% static 'runningApp/navbar.css' %}>
+
+    {% block page_head %}{% endblock page_head %}
+{% endblock head %}
+
+
 {% block content %}
 
-<header>Hello</header>
+    <header class="flex-row">
+        {% if user.is_authenticated %}
+        <h1 class="header-left header-text">Hi, {{ user.get_full_name }}!</h1>
+        <a class="header-text" href="{% url 'logout' %}">Logout</a>
+    {% endif %}
+    </header>
 
-{% block page_content %}{% endblock page_content %}
+    {% block page_content %}{% endblock page_content %}
 {% endblock content %}

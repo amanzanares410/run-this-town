@@ -1,0 +1,26 @@
+header{
+    background-color: var(--dark-grey);
+    color: white;
+    font-size: x-large;
+    padding: 10px;
+}
+
+.header-text{
+    margin: 0;
+    font-size: inherit;
+    color: inherit;
+    font-weight: inherit;
+}
+
+a.header-text{
+    text-decoration: none;
+}
+
+a.header-text:hover{
+    color: var(--orange-hover);
+    cursor: pointer;
+}
+
+.header-left{
+    margin-right: auto;
+}
