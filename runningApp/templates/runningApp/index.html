@@ -1,62 +1,60 @@
-{% load static %}
-{% load socialaccount %}
+{% extends "./base.html" %}
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Kelly+Slab&display=swap" rel="stylesheet">
+{% block head %}
+    {% load static %}
+    {% load socialaccount %}
 
-<link rel='stylesheet' href= {% static 'runningApp/global_classes.css' %}>
-<link rel='stylesheet' href= {% static 'runningApp/colors.css' %}>
-<link rel='stylesheet' href= {% static 'runningApp/index.css' %}>
-<link rel='stylesheet' href= {% static 'runningApp/fonts.css' %}>
+    <link rel='stylesheet' href= {% static 'runningApp/index.css' %}>
 
-{% comment "Citation" %}
-Title: How to loop changing text in HTML/Javascript
-URL: https://stackoverflow.com/a/44170159
-Purpose: Used a modified version of user5801980's answer to loop through words in html element text
-{% endcomment %}
 
-<script defer>
-    const words = ['Run ', 'Walk ', 'Bike ', 'Jog ', 'Run '];
-
-    cycleText(0);
-    function cycleText(i) {
-
-        if (words.length > i) {
-            setTimeout(function() {
-                document.getElementById('word-swap').innerHTML = words[i];
-                cycleText(++i);
-            }, 1000);
-
+    {% comment "Citation" %}
+    Title: How to loop changing text in HTML/Javascript
+    URL: https://stackoverflow.com/a/44170159
+    Purpose: Used a modified version of user5801980's answer to loop through words in html element text
+    {% endcomment %}
+    <script defer>
+        const words = ['Run ', 'Walk ', 'Bike ', 'Jog ', 'Run '];
+    
+        cycleText(0);
+        function cycleText(i) {
+    
+            if (words.length > i) {
+                setTimeout(function() {
+                    document.getElementById('word-swap').innerHTML = words[i];
+                    cycleText(++i);
+                }, 1000);
+    
+            }
         }
-    }
-</script>
+    </script>
+{% endblock head %}
 
-
-<div class='full-screen flex-row background'>
-    <div class='full-height flex-column fill left'>
-        <div class='flex-column header-text text-container fill'>
-            <span><h1 id='word-swap' class='movement'>Run </h1><h1>This Town</h1></span>
-            <h3>Find your path, without limits</h3>
-        </div>
-        <div class='fill button-container'>
-            <button id='go-to-app-button'>Start Moving</button>
-            {% comment %} had to switch this to post with form to bypass the ugly screen https://stackoverflow.com/a/72162783 {% endcomment %}
-            <form action="{% provider_login_url 'google' %}" method="post">
-                {% csrf_token %}
-                <button type="submit">
+{% block content %}
+    <div class='full-screen flex-row background'>
+        <div class='full-height flex-column fill left'>
+            <div class='flex-column header-text text-container fill'>
+                <span><h1 id='word-swap' class='movement'>Run </h1><h1>This Town</h1></span>
+                <h3>Find your path, without limits</h3>
+            </div>
+            <div class='fill button-container'>
+                <button id='go-to-app-button'>Start Moving</button>
+                {% comment %} had to switch this to post with form to bypass the ugly screen https://stackoverflow.com/a/72162783 {% endcomment %}
+                <form action="{% provider_login_url 'google' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">
+                        <img src="{% static 'runningApp/images/btn_google_signin_dark_normal_web.png' %}" alt="Google Sign-In">
+                    </button>
+                </form>
+                {% comment %} <a id="google-sign-in-button" href="{% provider_login_url 'google' %}?next=/">
                     <img src="{% static 'runningApp/images/btn_google_signin_dark_normal_web.png' %}" alt="Google Sign-In">
-                </button>
-            </form>
-            {% comment %} <a id="google-sign-in-button" href="{% provider_login_url 'google' %}?next=/">
-                <img src="{% static 'runningApp/images/btn_google_signin_dark_normal_web.png' %}" alt="Google Sign-In">
-            </a> {% endcomment %}
-            
+                </a> {% endcomment %}
+                
+            </div>
+        </div>
+        <div class='full-height flex-column fill right'>
+            {% comment "TODO" %} Replace this with lazy loading technique
+            https://letsusetech.com/optimize-image-rendering-with-lazy-loaded-images
+            {% endcomment %}
         </div>
     </div>
-    <div class='full-height flex-column fill right'>
-        {% comment "TODO" %} Replace this with lazy loading technique
-        https://letsusetech.com/optimize-image-rendering-with-lazy-loaded-images
-        {% endcomment %}
-    </div>
-</div>
+{% endblock content %}
