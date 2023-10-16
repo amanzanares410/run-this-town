@@ -1,8 +1,9 @@
 header{
     background-color: var(--dark-grey);
     color: white;
-    font-size: x-large;
+    font-size: 3vmin;
     padding: 10px;
+    border-bottom: 1px solid white;
 }
 
 .header-text{
@@ -16,11 +17,25 @@ a.header-text{
     text-decoration: none;
 }
 
-a.header-text:hover{
+a.header-text:hover, .header-links *:hover{
     color: var(--orange-hover);
     cursor: pointer;
 }
 
 .header-left{
     margin-right: auto;
+    padding-left: 10%;
+}
+
+.header-links{
+    gap: 2%;
+    justify-content: end;
+    /* margin-right: .5%; */
+    padding-right: 10%;
+}
+
+.highlight{
+    border: solid 1px var(--orange-hover);
+    border-radius: 10px;
+    padding: 5px;
 }
