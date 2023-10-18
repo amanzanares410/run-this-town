@@ -14,6 +14,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 
+#Google API Key
+GOOGLE_MAPS_API_KEY = "AIzaSyDgwnmZRetNNXzKge7VRGszaN5HPUeNnvw"
+
 # SECURITY WARNING: don't run with debug turned on in production!
 #DEBUG = True
 #Using Heroku Config Vars if DEBUG is set to True, then true otherwise false (including case with no def)
