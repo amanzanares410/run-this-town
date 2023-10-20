@@ -21,14 +21,14 @@ def logged_in_view(request):
         admin_group.user_set.add(request.user)
     if request.user.groups.filter(name='Admins').exists():
         # User is an admin
-        return render(request=request, template_name="runningApp/logged_in_admin.html")
+        return render(request=request, template_name="runningApp/logged_in_admin.html", context={"GOOGLE_MAPS_API_KEY": settings.GOOGLE_MAPS_API_KEY })
     else:
         # User is a regular user
-        return render(request=request, template_name="runningApp/logged_in.html")
+        return render(request=request, template_name="runningApp/logged_in.html", context={"GOOGLE_MAPS_API_KEY": settings.GOOGLE_MAPS_API_KEY })
 
 def logout_view(request):
     logout(request)
     return redirect('index')
 
-def map_view(request):
-    return render(request, template_name="runningApp/map.html", context={"GOOGLE_MAPS_API_KEY": settings.GOOGLE_MAPS_API_KEY })
+# def map_view(request):
+#     return render(request, template_name="runningApp/map.html")
