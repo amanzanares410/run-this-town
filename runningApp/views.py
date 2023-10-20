@@ -4,6 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib.auth.models import Group
 
+from mysite import settings
+
 
 
 def index(request):
@@ -29,4 +31,4 @@ def logout_view(request):
     return redirect('index')
 
 def map_view(request):
-    return render(request, template_name="runningApp/map.html")
+    return render(request, template_name="runningApp/map.html", context={"GOOGLE_MAPS_API_KEY": settings.GOOGLE_MAPS_API_KEY })
