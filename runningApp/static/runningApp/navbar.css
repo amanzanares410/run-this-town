@@ -9,6 +9,7 @@ header{
     height: 6vh;
     top: 0;
     box-sizing: border-box;
+    z-index: 1;
 }
 
 .header-text{

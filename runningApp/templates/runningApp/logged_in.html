@@ -5,9 +5,7 @@
 {% endblock head %} {% endcomment %}
 
 {% block page_content %}
-    <div class="full-screen" style="background: var(--dark-grey); color: white">
-        <h1>Logged in</h1>
-        <h1>Welcome to the normal user dashboard</h1>
-        {% block components %}{% endblock components %}
+    <div class="full-screen" style="background: var(--dark-grey); color: white; height: 94vh">
+        {% include "./map.html" %}
     </div>
 {% endblock page_content %}
