@@ -41,7 +41,7 @@
                 {% comment %} had to switch this to post with form to bypass the ugly screen https://stackoverflow.com/a/72162783 {% endcomment %}
                 <form action="{% provider_login_url 'google' %}" method="post">
                     {% csrf_token %}
-                    <button type="submit">
+                    <button type="submit" id="google-sign-in-button">
                         <img src="{% static 'runningApp/images/btn_google_signin_dark_normal_web.png' %}" alt="Google Sign-In">
                     </button>
                 </form>
