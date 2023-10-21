@@ -14,6 +14,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 #SECRET_KEY = 
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
+#Weather API Key
+WEATHER_API_KEY = "367ecd84d69e63aeffc9678bc03c8cb0"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 #DEBUG = True

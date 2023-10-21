@@ -27,3 +27,6 @@ def logged_in_view(request):
 def logout_view(request):
     logout(request)
     return redirect('index')
+
+def weather_view(request):
+    return render(request, template_name="runningApp/weather.html")
