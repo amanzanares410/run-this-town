@@ -1,0 +1,7 @@
+{% if temperature and description %}
+    <h1>Weather in Charlottesville, VA</h1>
+    <p>Temperature: {{ temperature }}°C</p>
+    <p>Description: {{ description }}</p>
+{% else %}
+    <p>{{ error }}</p>
+{% endif %}
