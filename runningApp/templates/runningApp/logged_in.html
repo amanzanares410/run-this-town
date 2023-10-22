@@ -1,20 +1,11 @@
-{% load static %}
-{% load socialaccount %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Logged In</title>
-</head>
-<body>
-    <h1>Logged in</h1>
-    {% if user.is_authenticated %}
-    <p>Welcome to the Normal User Dashboard, {{ user.get_full_name }}!</p>
-    <p>Account Name: {{ user.username }}</p>
-    <a href="{% url 'logout' %}">Logout</a>
-{% endif %}
+{% extends "./base_navbar.html" %}
 
-</body>
-</html>
+{% comment %} {% block head %}
+    {% load socialaccount %}
+{% endblock head %} {% endcomment %}
+
+{% block page_content %}
+    <div class="full-screen" style="background: var(--dark-grey); color: white; height: 94vh">
+        {% include "./map.html" %}
+    </div>
+{% endblock page_content %}
