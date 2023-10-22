@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{% static 'runningApp/weather_style.css' %}">
 </head>
 <body>
+    <a href="{%url 'logged_in_view' %}" class="back-to-home">← Back to Home</a>
     {% if temperature and description %}
         <h1>Weather in Charlottesville, VA</h1>
         <p>Temperature: {{ temperature }}°F</p>
