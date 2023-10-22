@@ -1,7 +1,20 @@
-{% if temperature and description %}
-    <h1>Weather in Charlottesville, VA</h1>
-    <p>Temperature: {{ temperature }}°F</p>
-    <p>Description: {{ description }}</p>
-{% else %}
-    <p>{{ error }}</p>
-{% endif %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Information</title>
+    <link rel="stylesheet" href="{% static 'runningApp/weather_style.css' %}">
+</head>
+<body>
+    {% if temperature and description %}
+        <h1>Weather in Charlottesville, VA</h1>
+        <p>Temperature: {{ temperature }}°F</p>
+        <p>Description: {{ description }}</p>
+    {% else %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+</body>
+</html>
