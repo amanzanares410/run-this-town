@@ -23,5 +23,5 @@ jobs:
             os.chdir("runningApp")
             print("New Working directory:", os.getcwd())
             print("New Files:", os.listdir("."))
-            from test_mock_tests import *
+            import test_mock_tests
             unittest.main()
