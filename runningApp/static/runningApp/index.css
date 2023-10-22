@@ -57,13 +57,12 @@ button {
     line-height: normal;
 }
 
-button:hover {
-    cursor: pointer;
-}
+/* button:hover {
+} */
 
-#go-to-app-button:hover {
+/* #go-to-app-button:hover {
     border-color: var(--orange-hover);
-}
+} */
 
 #google-sign-in-button img:hover {
     filter: brightness(75%);
@@ -73,4 +72,8 @@ button:hover {
     width: fit-content;
     height: fit-content;
     padding: 0%;
+}
+
+#google-sign-in-button:hover {
+    cursor: pointer;
 }

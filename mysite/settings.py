@@ -11,9 +11,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-#SECRET_KEY = 
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
+#Weather API Key
+WEATHER_API_KEY = "367ecd84d69e63aeffc9678bc03c8cb0"
+
+#Google API Key
+GOOGLE_MAPS_API_KEY = "AIzaSyDgwnmZRetNNXzKge7VRGszaN5HPUeNnvw"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 #DEBUG = True
@@ -185,6 +189,7 @@ SITE_ID = 2
 # LOGOUT_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL = 'logged_in_view'
 LOGOUT_REDIRECT_URL = 'index'
+LOGIN_URL = 'index'
 
 # above is google login, below is heroku
 
