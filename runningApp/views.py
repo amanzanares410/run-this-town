@@ -35,7 +35,7 @@ def weather_view(request):
         'lat': 38.0293,
         'lon': -78.4767,
         'appid': settings.WEATHER_API_KEY,
-        'units': 'metric'
+        'units': 'imperial'
     }
     response = requests.get(base_url, params=params)
     print(response.text)
