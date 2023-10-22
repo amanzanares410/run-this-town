@@ -17,5 +17,6 @@ jobs:
       - uses: jannekem/run-python-script-action@v1
         with:
           script: |
+            print(os.getcwd())
             from runningApp.test_mock_tests import *
             unittest.main()
