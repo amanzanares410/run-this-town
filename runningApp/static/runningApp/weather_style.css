@@ -1,8 +1,5 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #eaf7fe;
-    color: #333;
-    height: 100vh;
+#weather {
+    height: 94vh;
     display: flex;
     flex-direction: column;
     justify-content: center;

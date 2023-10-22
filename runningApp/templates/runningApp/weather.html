@@ -1,21 +1,19 @@
+{% extends "./base_navbar.html" %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Information</title>
+{% block page_head %}
     <link rel="stylesheet" href="{% static 'runningApp/weather_style.css' %}">
-</head>
-<body>
-    <a href="{%url 'logged_in_view' %}" class="back-to-home">← Back to Home</a>
+    <title>Weather | Run This Town</title>
+{% endblock page_head %}
+
+{% block page_content %}
     {% if temperature and description %}
+    <div id="weather">
         <h1>Weather in Charlottesville, VA</h1>
         <p>Temperature: {{ temperature }}°F</p>
         <p>Description: {{ description }}</p>
+    </div>
     {% else %}
         <p class="error">{{ error }}</p>
     {% endif %}
-</body>
-</html>
+{% endblock page_content %}
