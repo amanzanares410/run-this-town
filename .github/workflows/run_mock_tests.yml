@@ -17,7 +17,11 @@ jobs:
       - uses: jannekem/run-python-script-action@v1
         with:
           script: |
+            import os
             print("Working directory:", os.getcwd())
             print("Files:", os.listdir("."))
+            os.chdir("runningApp")
+            print("New Working directory:", os.getcwd())
+            print("New Files:", os.listdir("."))
             from runningApp.test_mock_tests import *
             unittest.main()

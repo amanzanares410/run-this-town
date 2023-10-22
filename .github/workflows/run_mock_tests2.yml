@@ -12,5 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: RunTests
-      run: python runningApp/test_mock_tests.py
+      run: |
+      ls
+      pwd
+      python runningApp/test_mock_tests.py
       shell: sh
