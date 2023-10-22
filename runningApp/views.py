@@ -32,11 +32,13 @@ def logout_view(request):
 def weather_view(request):
     base_url = "http://api.openweathermap.org/data/2.5/weather"
     params = {
-        'q': 'Charlottesville, VA',
+        'lat': 38.0293,
+        'lon': -78.4767,
         'appid': settings.WEATHER_API_KEY,
         'units': 'metric'
     }
     response = requests.get(base_url, params=params)
+    print(response.text)
 
     if response.status_code == 200:
         data = response.json()
