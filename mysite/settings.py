@@ -13,6 +13,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
+#Weather API Key
+WEATHER_API_KEY = "367ecd84d69e63aeffc9678bc03c8cb0"
 
 #Google API Key
 GOOGLE_MAPS_API_KEY = "AIzaSyDgwnmZRetNNXzKge7VRGszaN5HPUeNnvw"
