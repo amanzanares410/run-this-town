@@ -17,6 +17,7 @@ jobs:
       - uses: jannekem/run-python-script-action@v1
         with:
           script: |
-            print(os.getcwd())
+            print("Working directory:", os.getcwd())
+            print("Files:", os.listdir("."))
             from runningApp.test_mock_tests import *
             unittest.main()
