@@ -18,10 +18,11 @@ jobs:
         with:
           script: |
             import os
+            import unittest
             print("Working directory:", os.getcwd())
             print("Files:", os.listdir("."))
             os.chdir("runningApp")
-            print("New Working directory:", os.getcwd())
-            print("New Files:", os.listdir("."))
-            import test_mock_tests
+            # print("New Working directory:", os.getcwd())
+            # print("New Files:", os.listdir("."))
+            from runningApp.test_mock_tests import *
             unittest.main()

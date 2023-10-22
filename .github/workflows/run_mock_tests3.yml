@@ -2,7 +2,7 @@ name: Run Mock Tests 3
 
 on:
   push:
-    branches: [ main ]
+    branches: [ dev ]
 
 jobs:
   build:
