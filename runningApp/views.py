@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib.auth.models import Group
 from django.views.generic import *
+from django.db.models import Q
 
 from mysite import settings
 from django.conf import settings
@@ -17,7 +18,11 @@ def index(request):
 
 @login_required
 def logged_in_view(request):
-      # Check if the user's email is 'cs3240.super@gmail.com'
+    # Check if the user's email is 'cs3240.super@gmail.com'
+    routes = Route.objects.filter(Q(approved=True) | Q(user_id=request.user))
+    route_start_points = []
+    for r in routes:
+        route_start_points.append([r.stops.first().latitude, r.stops.first().longitude])
     if request.user.email == 'cs3240.super@gmail.com':
         # Fetch the Admins group
         admin_group = Group.objects.get(name='Admins')
@@ -25,10 +30,10 @@ def logged_in_view(request):
         admin_group.user_set.add(request.user)
     if request.user.groups.filter(name='Admins').exists():
         # User is an admin
-        return render(request=request, template_name="runningApp/logged_in_admin.html", context={"GOOGLE_MAPS_API_KEY": settings.GOOGLE_MAPS_API_KEY })
+        return render(request=request, template_name="runningApp/logged_in_admin.html", context={"GOOGLE_MAPS_API_KEY": settings.GOOGLE_MAPS_API_KEY, "route_start_points": route_start_points })
     else:
         # User is a regular user
-        return render(request=request, template_name="runningApp/logged_in.html", context={"GOOGLE_MAPS_API_KEY": settings.GOOGLE_MAPS_API_KEY })
+        return render(request=request, template_name="runningApp/logged_in.html", context={"GOOGLE_MAPS_API_KEY": settings.GOOGLE_MAPS_API_KEY, "route_start_points": route_start_points })
 
 def logout_view(request):
     logout(request)
