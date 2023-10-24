@@ -3,10 +3,13 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib.auth.models import Group
+from django.views.generic import *
 
 from mysite import settings
 from django.conf import settings
 import requests
+
+from runningApp.models import Route
 
 
 def index(request):
@@ -57,3 +60,8 @@ def weather_view(request):
         }
 
     return render(request, 'runningApp/weather.html', context)
+
+
+class Route_View(ListView):
+    template_name = 'runningApp/routes.html'
+    model = Route
