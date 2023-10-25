@@ -22,6 +22,10 @@
             zoom: 13,
         });
 
+        {% if object %}
+            return;
+        {% endif %}
+
         let rsp = {{ route_start_points }};
         for (let i = 0; i < rsp.length; i++) {
             const mark = addMarker(rsp[i][0], rsp[i][1], rsp[i][2]);
@@ -34,14 +38,14 @@
         }
     }
 
-    function addMarker(lat, lng, id) {
+    function addMarker(lat, lng, id, url="https://static-00.iconduck.com/assets.00/runner-icon-1954x2048-w2ek49bj.png") {
         // console.log(lat, lng, title, window);
         const mark = new google.maps.Marker({
             position: {lat: lat, lng: lng},
             map: map,
             id: id,
             icon: {
-                url: "https://static-00.iconduck.com/assets.00/runner-icon-1954x2048-w2ek49bj.png",
+                url: url,
                 scaledSize: new google.maps.Size(20, 20),
             },
         });
@@ -65,6 +69,14 @@
         {% endfor %}
         console.log(stop_list);
         google.maps.event.addDomListener(window, 'load', () => panTo(stop_list[0]));
+        google.maps.event.addDomListener(window, 'load', () => addCurrentStops(stop_list));
+
+        function addCurrentStops(stop_list){
+            stop_list.forEach((obj, i)=>{
+                addMarker(obj.lat, obj.long, obj.id, "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Running_icon_-_Noun_Project_17825_retouched.svg/1229px-Running_icon_-_Noun_Project_17825_retouched.svg.png");
+            })
+        }
+        
     {% endif %}
     
 </script>
