@@ -1,17 +1,70 @@
 {% extends "./admin_navbar.html" %}
 
 {% block page_content %}
+    <div class="fill flex-column" id="routes-shelf">
+        
     {% if not route_list %}
-        <p> no routes </p>
+        <div class="fill flex-column">
+            <h1>No Routes to Approve</h1>
+        </div>
     {% endif %}
     {% for route in route_list %}
-        <p> {{ route.user_id }}</p>
-        <p> {{ route.route_name }}</p>
-        <p> {{ route.route_description }}</p>
-        <p> {{ route.approved }}</p>
-        {% for stop in route.stops.all %}
-            <p> {{ stop.latitude }}</p>
-            <p> {{ stop.longitude }}</p>        
-        {% endfor %}
+        <div class="card flex-row">
+            <div class="this-info flex-column fill">
+                <h1>{{ route.route_name }}</h1>
+                <h3>{{ route.user_id }}</h3>
+                <p>{{ route.route_description }}</p>
+                <button>Approve</button> 
+            </div>
+            <div class="this-stops flex-column fill">
+                {% for stop in route.stops.all %}
+                    <div class="flex-column">
+                        <p class="coords">( {{ stop.latitude }}, {{ stop.longitude }} )</p>
+                    </div>
+                {% endfor %}
+                <button>View All</button>
+            </div>
+        </div>
     {% endfor %}
+    </div>
+
+    <style>
+        #routes-shelf {
+            background-color: var(--dark-grey);
+            top: 6vh;
+            color: white;
+            height: 94vh;
+            box-sizing: border-box;
+        }
+
+        .card {
+            border: 1px solid white;
+            border-radius: 10px;
+            padding: 2vh 2vw;
+            width: 25vw;
+            gap: 2vh;
+        }
+
+        .this-info {
+            width: 50%;
+            gap: 1vh;
+        }
+
+        .this-stops {
+            width: 50%;
+            gap: 1vh;
+            overflow-y: auto;
+        }
+
+        div *{
+            margin: 0;
+        }
+
+        .coords{
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
 {% endblock page_content %}
