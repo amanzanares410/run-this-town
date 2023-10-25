@@ -24,21 +24,26 @@
 
         let rsp = {{ route_start_points }};
         for (let i = 0; i < rsp.length; i++) {
-            addMarker(rsp[i][0], rsp[i][1]);
+            const mark = addMarker(rsp[i][0], rsp[i][1], rsp[i][2]);
+            google.maps.event.addListener(mark, 'click', (e) =>{ 
+                console.log(mark.id);
+                console.log( "/logged-in/" + mark.id + "/") // HARDCODED ... url resolving doesn't work with dynamic value - could make custom tag with lazy load but eh
+            });
         }
     }
 
-    function addMarker(lat, lng, title) {
+    function addMarker(lat, lng, id) {
         // console.log(lat, lng, title, window);
-        new google.maps.Marker({
+        const mark = new google.maps.Marker({
             position: {lat: lat, lng: lng},
             map: map,
-            title: title,
+            id: id,
             icon: {
                 url: "https://static-00.iconduck.com/assets.00/runner-icon-1954x2048-w2ek49bj.png",
                 scaledSize: new google.maps.Size(20, 20),
             },
         });
+        return mark;
     }
 
     google.maps.event.addDomListener(window, 'load', initMap);
