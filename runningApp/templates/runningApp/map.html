@@ -26,8 +26,10 @@
         for (let i = 0; i < rsp.length; i++) {
             const mark = addMarker(rsp[i][0], rsp[i][1], rsp[i][2]);
             google.maps.event.addListener(mark, 'click', (e) =>{ 
-                console.log(mark.id);
-                console.log( "/logged-in/" + mark.id + "/") // HARDCODED ... url resolving doesn't work with dynamic value - could make custom tag with lazy load but eh
+                // console.log(fetch("/runningApp/logged-in/" + mark.id + "/"));
+                window.location.href = "/runningApp/logged-in/" + mark.id + "/"
+                // console.log(mark.id);
+                // console.log( "/logged-in/" + mark.id + "/") // HARDCODED ... url resolving doesn't work with dynamic value - could make custom tag with lazy load but eh
             });
         }
     }
