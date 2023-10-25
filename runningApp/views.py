@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth import logout
 from django.contrib.auth.models import Group
 from django.views.generic import *
@@ -41,7 +42,7 @@ def logout_view(request):
 
 # def map_view(request):
 #     return render(request, template_name="runningApp/map.html")
-
+@login_required
 def weather_view(request):
     base_url = "http://api.openweathermap.org/data/2.5/weather"
     params = {
@@ -67,12 +68,12 @@ def weather_view(request):
     return render(request, 'runningApp/weather.html', context)
 
 
-class Route_View(ListView):
+class Route_View(LoginRequiredMixin, ListView):
     template_name = 'runningApp/routes.html'
     model = Route
 
 
-class Route_Detail(DetailView):
+class Route_Detail(LoginRequiredMixin, DetailView):
     template_name = 'runningApp/logged_in.html'
     model = Route
 
@@ -85,3 +86,11 @@ class Route_Detail(DetailView):
         context["GOOGLE_MAPS_API_KEY"] = settings.GOOGLE_MAPS_API_KEY
         context["route_start_points"] = route_start_points
         return context
+    
+    
+class Approve_Routes(UserPassesTestMixin, LoginRequiredMixin, ListView):
+    template_name = 'runningApp/approve_routes.html'
+    model = Route
+
+    def test_func(self):
+        return self.request.user.groups.filter(name='Admins').exists()
