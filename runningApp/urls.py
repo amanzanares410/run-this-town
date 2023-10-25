@@ -11,4 +11,5 @@ urlpatterns = [
     path('routes/', views.Route_View.as_view(), name='routes'),
     path('logged-in/<int:pk>/', views.Route_Detail.as_view(), name='route_detail'),
     path('approve-routes/', views.Approve_Routes.as_view(), name='approve_routes'),
+    path('approve/', views.approve, name='approve'),
 ]

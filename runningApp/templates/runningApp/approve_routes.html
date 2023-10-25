@@ -14,7 +14,11 @@
                 <h1>{{ route.route_name }}</h1>
                 <h3>{{ route.user_id }}</h3>
                 <p>{{ route.route_description }}</p>
-                <button>Approve</button> 
+                <form action = {% url "approve" %} method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="route_id" value="{{ route.id }}">
+                    <input type="submit" value="Approve">
+                </form>
             </div>
             <div class="this-stops flex-column fill">
                 {% for stop in route.stops.all %}

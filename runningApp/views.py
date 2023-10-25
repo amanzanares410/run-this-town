@@ -108,3 +108,14 @@ class Approve_Routes(UserPassesTestMixin, LoginRequiredMixin, ListView):
     
     def get_queryset(self):
         return super().get_queryset().filter(approved=False)
+    
+@login_required
+def approve(request):
+    if(request.method != 'POST'):
+        return redirect('approve_routes')
+    # print(request.POST)
+    route_id = request.POST.get('route_id')
+    route = Route.objects.get(id=route_id)
+    route.approved = True
+    route.save()
+    return redirect('approve_routes')
