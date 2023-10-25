@@ -22,7 +22,7 @@ def logged_in_view(request):
     routes = Route.objects.filter(Q(approved=True) | Q(user_id=request.user))
     route_start_points = []
     for r in routes:
-        route_start_points.append([r.stops.first().latitude, r.stops.first().longitude]) # , r.route_name
+        route_start_points.append([r.stops.first().latitude, r.stops.first().longitude, r.id]) # , r.route_name
     if request.user.email == 'cs3240.super@gmail.com':
         # Fetch the Admins group
         admin_group = Group.objects.get(name='Admins')
@@ -70,3 +70,18 @@ def weather_view(request):
 class Route_View(ListView):
     template_name = 'runningApp/routes.html'
     model = Route
+
+
+class Route_Detail(DetailView):
+    template_name = 'runningApp/logged_in.html'
+    model = Route
+
+    def get_context_data(self, **kwargs):
+        routes = Route.objects.filter(Q(approved=True) | Q(user_id=self.request.user))
+        route_start_points = []
+        for r in routes:
+            route_start_points.append([r.stops.first().latitude, r.stops.first().longitude, r.id]) # , r.route_name
+        context = super().get_context_data(**kwargs)
+        context["GOOGLE_MAPS_API_KEY"] = settings.GOOGLE_MAPS_API_KEY
+        context["route_start_points"] = route_start_points
+        return context
