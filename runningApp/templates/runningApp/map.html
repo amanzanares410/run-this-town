@@ -49,5 +49,16 @@
     }
 
     google.maps.event.addDomListener(window, 'load', initMap);
+
+    function panTo(obj){
+        const center = new google.maps.LatLng( obj.lat , obj.long);
+        map.panTo(center);
+    }
+
+    {% if object %}
+        let obj = {lat: {{ object.stops.all.0.latitude }}, long: {{ object.stops.all.0.longitude}} };
+        google.maps.event.addDomListener(window, 'load', () => panTo(obj));
+    {% endif %}
+    
 </script>
 
