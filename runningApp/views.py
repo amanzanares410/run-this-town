@@ -1,3 +1,5 @@
+from typing import Any
+from django.db.models.query import QuerySet
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
@@ -74,8 +76,13 @@ class Route_View(LoginRequiredMixin, ListView):
 
 
 class Route_Detail(LoginRequiredMixin, DetailView):
-    template_name = 'runningApp/logged_in.html'
     model = Route
+
+    def get_template_names(self):
+        if self.request.user.groups.filter(name='Admins').exists():
+            return ['runningApp/logged_in_admin.html']
+        else:
+            return ['runningApp/logged_in.html']
 
     def get_context_data(self, **kwargs):
         routes = Route.objects.filter(Q(approved=True) | Q(user_id=self.request.user))
@@ -94,3 +101,6 @@ class Approve_Routes(UserPassesTestMixin, LoginRequiredMixin, ListView):
 
     def test_func(self):
         return self.request.user.groups.filter(name='Admins').exists()
+    
+    def get_queryset(self):
+        return super().get_queryset().filter(approved=False)
