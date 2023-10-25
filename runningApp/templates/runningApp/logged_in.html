@@ -7,37 +7,8 @@
 {% block page_content %}
     <div class="full-screen" style="background: var(--dark-grey); color: white; height: 94vh">
         {% include "./map.html" %}
-        {% if object %}
-            <div id="detail-viewer">
-                <div id="title-bar" class="flex-row">
-                    {{ object.route_name }}
-                    <a href = {% url "logged_in_view" %} id="close">X</a>
-                </div>
-            </div>
-        {% endif %}
+        {% include "./detail_sidebar.html" %}
     </div>
 
-    
-    <style>
-        #detail-viewer {
-            position: absolute;
-            top: 8vh;
-            right: 4vw;
-            width: 30vw;
-            height: 86vh;
-            background: var(--dark-grey);
-            color: white;
-            padding: 1rem;
-            overflow-y: auto;
-            z-index: 2;
-            border-radius: 10px;
-        }
-
-        #close {
-            text-decoration: none;
-            color: white;
-            margin-left: auto;
-        }
-    </style>
 {% endblock page_content %}
 
