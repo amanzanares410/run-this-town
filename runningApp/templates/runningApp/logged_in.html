@@ -8,8 +8,4 @@
     <div class="full-screen" style="background: var(--dark-grey); color: white; height: 94vh">
         {% include "./map.html" %}
     </div>
-    {% for sp in route_start_points %}
-        <p> {{ sp.0 }}</p>
-        <p> {{ sp.1 }}</p>
-    {% endfor %}
 {% endblock page_content %}

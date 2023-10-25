@@ -22,7 +22,7 @@ def logged_in_view(request):
     routes = Route.objects.filter(Q(approved=True) | Q(user_id=request.user))
     route_start_points = []
     for r in routes:
-        route_start_points.append([r.stops.first().latitude, r.stops.first().longitude])
+        route_start_points.append([r.stops.first().latitude, r.stops.first().longitude]) # , r.route_name
     if request.user.email == 'cs3240.super@gmail.com':
         # Fetch the Admins group
         admin_group = Group.objects.get(name='Admins')
