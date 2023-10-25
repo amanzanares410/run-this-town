@@ -85,6 +85,9 @@ class Route_Detail(LoginRequiredMixin, DetailView):
             return ['runningApp/logged_in.html']
 
     def get_context_data(self, **kwargs):
+        route_id = self.kwargs['pk']
+        current_stops = Route.objects.get(id=route_id).stops.all().order_by('routestop__stop_order')
+
         routes = Route.objects.filter(Q(approved=True) | Q(user_id=self.request.user))
         route_start_points = []
         for r in routes:
@@ -92,6 +95,7 @@ class Route_Detail(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context["GOOGLE_MAPS_API_KEY"] = settings.GOOGLE_MAPS_API_KEY
         context["route_start_points"] = route_start_points
+        context["current_stops"] = current_stops
         return context
     
     

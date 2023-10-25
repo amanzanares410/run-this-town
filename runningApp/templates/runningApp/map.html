@@ -56,8 +56,15 @@
     }
 
     {% if object %}
-        let obj = {lat: {{ object.stops.all.0.latitude }}, long: {{ object.stops.all.0.longitude}} };
-        google.maps.event.addDomListener(window, 'load', () => panTo(obj));
+        console.log("hello")
+        let stop_list = [];
+        let obj;
+        {% for stop in current_stops%}
+            obj  = {id: {{stop.id}}, lat: {{ stop.latitude }}, long: {{ stop.longitude}} };
+            stop_list.push(obj);
+        {% endfor %}
+        console.log(stop_list);
+        google.maps.event.addDomListener(window, 'load', () => panTo(stop_list[0]));
     {% endif %}
     
 </script>

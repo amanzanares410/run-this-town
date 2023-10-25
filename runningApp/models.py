@@ -18,3 +18,6 @@ class RouteStop(models.Model):
     route_id = models.ForeignKey(Route, on_delete=models.CASCADE)
     stop_id = models.ForeignKey(Stop, on_delete=models.CASCADE)
     stop_order = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ['stop_order']
