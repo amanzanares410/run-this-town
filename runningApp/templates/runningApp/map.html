@@ -12,6 +12,33 @@
             center: mapCenter,
             zoom: 14,
         });
+        var landmark1 = new google.maps.Marker({
+        position: { lat: 38.03596, lng: -78.50342 },
+        map: map,
+        title: 'The Rotunda'
+    });
+        var landmark2 = new google.maps.Marker({
+        position: { lat: 38.03344, lng: -78.50784 },
+        map: map,
+        title: 'Brown Library'
+    });
+
+        var landmark3 = new google.maps.Marker({
+        position: { lat: 38.03178, lng:  -78.51373 },
+        map: map,
+        title: 'Scott Stadium'
+    });
+        var landmark4 = new google.maps.Marker({
+        position: { lat: 38.03342, lng:  -78.52245},
+        map: map,
+        title: 'The Observatory'
+    });
+           var landmark5 = new google.maps.Marker({
+        position: { lat: 38.03313, lng:  -78.51361},
+        map: map,
+        title: 'The AFC'
+    });
+
     }
 
     google.maps.event.addDomListener(window, 'load', initMap);
