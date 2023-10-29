@@ -3,6 +3,18 @@
 <script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}"></script>
 
 <div id="map" class="full-height"></div>
+<div id="buttonContainer">
+    <button id="showLandmarksButton">Show Major Landmarks</button>
+</div>
+
+<style>
+    #buttonContainer {
+        position: absolute;
+        top: 110px;
+        left: 10px;
+        z-index: 1000;
+    }
+</style>
 
 <script>
     function initMap() {
@@ -12,33 +24,54 @@
             center: mapCenter,
             zoom: 14,
         });
+
         var landmark1 = new google.maps.Marker({
         position: { lat: 38.03596, lng: -78.50342 },
         map: map,
-        title: 'The Rotunda'
+        title: 'The Rotunda',
+             map: null,
     });
+
         var landmark2 = new google.maps.Marker({
         position: { lat: 38.03344, lng: -78.50784 },
         map: map,
-        title: 'Brown Library'
+        title: 'Brown Library',
+             map: null,
     });
 
         var landmark3 = new google.maps.Marker({
         position: { lat: 38.03178, lng:  -78.51373 },
         map: map,
-        title: 'Scott Stadium'
+        title: 'Scott Stadium',
+             map: null,
     });
         var landmark4 = new google.maps.Marker({
         position: { lat: 38.03342, lng:  -78.52245},
         map: map,
-        title: 'The Observatory'
+        title: 'The Observatory',
+             map: null,
     });
-           var landmark5 = new google.maps.Marker({
-        position: { lat: 38.03313, lng:  -78.51361},
+        var landmark5 = new google.maps.Marker({
+        position: { lat: 38.04055, lng:  -78.50558},
         map: map,
-        title: 'The AFC'
+        title: "Carr's Hill Field",
+             map: null,
+    });
+        var landmark6 = new google.maps.Marker({
+        position: { lat: 38.03648, lng:  -78.50589},
+        map: map,
+        title: 'Clemons Library',
+             map: null,
     });
 
+         document.getElementById('showLandmarksButton').addEventListener('click', function() {
+            landmark1.setMap(map);
+            landmark2.setMap(map);
+            landmark3.setMap(map);
+            landmark4.setMap(map);
+            landmark5.setMap(map);
+            landmark6.setMap(map);
+         });
     }
 
     google.maps.event.addDomListener(window, 'load', initMap);
