@@ -54,7 +54,6 @@ def weather_view(request):
         'units': 'imperial'
     }
     response = requests.get(base_url, params=params)
-    print(response.text)
 
     if response.status_code == 200:
         data = response.json()
@@ -68,6 +67,9 @@ def weather_view(request):
         }
 
     return render(request, 'runningApp/weather.html', context)
+
+def social(request):
+    return render(request=request, template_name="runningApp/social.html")
 
 
 class Route_View(LoginRequiredMixin, ListView):
