@@ -1,9 +1,15 @@
 {% extends "./base_navbar.html" %}
 {% load static %}
 
+{% block page_head %}
+    <link rel="stylesheet" href="{% static 'runningApp/social.css' %}">
+{% endblock page_head %}
 
 {% block page_content %}
-<p>
-  This is the social page
-</p>
+<div class="top-search-bar">
+  <form method="get">
+    <input type="text" name="q" placeholder="Search for friends">
+    <button type="submit">Search</button>
+  </form>
+</div>
 {% endblock page_content %}
