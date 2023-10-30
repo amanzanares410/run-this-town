@@ -42,6 +42,9 @@ def logout_view(request):
     logout(request)
     return redirect('index')
 
+def create_route(request):
+    return render(request=request, template_name="runningApp/create_route.html")
+
 # def map_view(request):
 #     return render(request, template_name="runningApp/map.html")
 @login_required
