@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth import logout
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
 from django.views.generic import *
 from django.db.models import Q
 
@@ -69,7 +69,12 @@ def weather_view(request):
     return render(request, 'runningApp/weather.html', context)
 
 def social(request):
-    return render(request=request, template_name="runningApp/social.html")
+    query = request.GET.get('friend-search')
+    if query:
+        users = User.objects.filter(email__icontains=query)
+    else:
+        users = User.objects.none()
+    return render(request=request, template_name="runningApp/social.html", context={'users': users})
 
 
 class Route_View(LoginRequiredMixin, ListView):

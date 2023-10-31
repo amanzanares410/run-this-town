@@ -8,8 +8,15 @@
 {% block page_content %}
 <div class="top-search-bar">
   <form method="get">
-    <input type="text" name="q" placeholder="Search for friends">
+    <input type="text" name="friend-search" placeholder="Search for friends">
     <button type="submit">Search</button>
   </form>
+</div>
+<div>
+    {% for user in users %}
+    <p>{{ user.username }}</p>
+    {% empty %}
+    <p>No users found.</p>
+    {% endfor %}
 </div>
 {% endblock page_content %}
