@@ -9,6 +9,30 @@
     <div class="full-screen" style="background: var(--dark-grey); color: white; height: 94vh">
         {% include "./map.html" %}
         {% include "./detail_sidebar.html" %}
+        <button id="finish-route">Finish</button>
     </div>
+
+    <style>
+        #finish-route {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            width: 20vw;
+            height: 6vh;
+            background: var(--dark-grey);
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 5;
+            border-radius: 10px;
+            box-shadow: 0 0 10px 0 var(--orange);
+            display: none;
+        }
+
+        #finish-route:active {
+            box-shadow: none;
+        }
+    </style>
 
 {% endblock page_content %}

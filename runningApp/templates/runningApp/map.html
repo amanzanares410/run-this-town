@@ -6,6 +6,11 @@
 
 <script>
     let map;
+    let newRouteStops;
+
+    if(window.location.href.includes("create")){
+        newRouteStops = [];
+    }
 
     {% comment %} const svgMarker = {
         path: 
@@ -42,6 +47,12 @@
                 const lat = e.latLng.lat();
                 const lng = e.latLng.lng();
                 const mark = addMarker(lat, lng, -1);
+                newRouteStops.push({lat: lat, lng: lng});
+                if(newRouteStops.length > 1){
+                    document.getElementById("finish-route").style.display = "block";
+                    console.log("displayed")
+                }
+                console.log(newRouteStops);
             })
         {% endif %}        
     }
