@@ -48,9 +48,10 @@
                 const lng = e.latLng.lng();
                 const mark = addMarker(lat, lng, -1);
                 newRouteStops.push({lat: lat, lng: lng});
-                if(newRouteStops.length > 1){
+                if(newRouteStops.length > 1){   // may be able to optimize by only checking if length is 2
                     document.getElementById("finish-route").style.display = "block";
                     console.log("displayed")
+                    // add call to Google Maps Routes API (has to be activated) to display route between points
                 }
                 console.log(newRouteStops);
             })
@@ -94,6 +95,7 @@
             stop_list.forEach((obj, i)=>{
                 addMarker(obj.lat, obj.long, obj.id, "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Running_icon_-_Noun_Project_17825_retouched.svg/1229px-Running_icon_-_Noun_Project_17825_retouched.svg.png");
             })
+            // add call to Google Maps Routes API (has to be activated) to display route between points
         }
         
     {% endif %}
