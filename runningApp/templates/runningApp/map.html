@@ -26,16 +26,18 @@
             return;
         {% endif %}
 
-        let rsp = {{ route_start_points }};
-        for (let i = 0; i < rsp.length; i++) {
-            const mark = addMarker(rsp[i][0], rsp[i][1], rsp[i][2]);
-            google.maps.event.addListener(mark, 'click', (e) =>{ 
-                // console.log(fetch("/runningApp/logged-in/" + mark.id + "/"));
-                window.location.href = "/runningApp/logged-in/" + mark.id + "/"
-                // console.log(mark.id);
-                // console.log( "/logged-in/" + mark.id + "/") // HARDCODED ... url resolving doesn't work with dynamic value - could make custom tag with lazy load but eh
-            });
-        }
+        {% if route_start_points %}
+            let rsp = {{ route_start_points }};
+            for (let i = 0; i < rsp.length; i++) {
+                const mark = addMarker(rsp[i][0], rsp[i][1], rsp[i][2]);
+                google.maps.event.addListener(mark, 'click', (e) =>{ 
+                    // console.log(fetch("/runningApp/logged-in/" + mark.id + "/"));
+                    window.location.href = "/runningApp/logged-in/" + mark.id + "/"
+                    // console.log(mark.id);
+                    // console.log( "/logged-in/" + mark.id + "/") // HARDCODED ... url resolving doesn't work with dynamic value - could make custom tag with lazy load but eh
+                });
+            }
+        {% endif %}        
     }
 
     function addMarker(lat, lng, id, url="https://static-00.iconduck.com/assets.00/runner-icon-1954x2048-w2ek49bj.png") {
