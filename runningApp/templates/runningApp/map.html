@@ -37,6 +37,12 @@
                     // console.log( "/logged-in/" + mark.id + "/") // HARDCODED ... url resolving doesn't work with dynamic value - could make custom tag with lazy load but eh
                 });
             }
+        {% else %}
+            google.maps.event.addListener(map, 'click', (e) =>{ 
+                const lat = e.latLng.lat();
+                const lng = e.latLng.lng();
+                const mark = addMarker(lat, lng, -1);
+            })
         {% endif %}        
     }
 
