@@ -43,7 +43,7 @@ def logout_view(request):
     return redirect('index')
 
 def create_route(request):
-    return render(request=request, template_name="runningApp/create_route.html")
+    return render(request=request, template_name="runningApp/create_route.html", context={"GOOGLE_MAPS_API_KEY": settings.GOOGLE_MAPS_API_KEY})
 
 # def map_view(request):
 #     return render(request, template_name="runningApp/map.html")
