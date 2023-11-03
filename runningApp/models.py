@@ -21,7 +21,3 @@ class RouteStop(models.Model):
 
     class Meta:
         ordering = ['stop_order']
-
-class Friend(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    following = models.BooleanField(default=False)
