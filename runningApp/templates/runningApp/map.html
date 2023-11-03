@@ -53,6 +53,15 @@
                     console.log("displayed")
                     // TODO: add call to Google Maps Routes API (has to be activated) to display route between points
                 }
+                google.maps.event.addListener(mark, 'click', (e) =>{
+                    console.log("clicked");
+                    newRouteStops = newRouteStops.filter((obj) => obj.lat != lat && obj.lng != lng);
+                    mark.setMap(null);
+                    if(newRouteStops.length < 2){
+                        document.getElementById("finish-route").style.display = "none";
+                    }
+                    console.log(newRouteStops);
+                });
                 console.log(newRouteStops);
             })
         {% endif %}        
