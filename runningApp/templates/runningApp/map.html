@@ -46,6 +46,8 @@
 
     let map;
     let newRouteStops;
+    const directionsService = new google.maps.DirectionsService();
+    const directionsRenderer = new google.maps.DirectionsRenderer();
 
     if(window.location.href.includes("create")){
         newRouteStops = [];
@@ -65,6 +67,7 @@
             center: mapCenter,
             zoom: 13,
         });
+        directionsRenderer.setMap(map);
 
         {% if object %}
             return;
@@ -133,6 +136,19 @@
         map.panTo(center);
     }
 
+    function calcRoute(start, end) {
+        const request = {
+          origin: start,
+          destination: end,
+          travelMode: 'WALKING'
+        };
+        directionsService.route(request, function(result, status) {
+          if (status == 'OK') {
+            directionsRenderer.setDirections(result);
+          }
+        });
+      }
+
     {% if object %}
         console.log("hello")
         let stop_list = [];
@@ -152,6 +168,8 @@
             // TODO: add call to Google Maps Routes API (has to be activated) to display route between points
         }
         
+        //console.log({lat: stop_list[0].lat, lng: stop_list[0].long}, {lat: stop_list[stop_list.length-1].lat, lng: stop_list[stop_list.length-1].long});
+        calcRoute({lat: stop_list[0].lat, lng: stop_list[0].long}, {lat: stop_list[stop_list.length-1].lat, lng: stop_list[stop_list.length-1].long});
     {% endif %}
     
 </script>
