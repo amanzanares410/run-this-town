@@ -71,7 +71,7 @@ def weather_view(request):
 def social(request):
     query = request.GET.get('friend-search')
     if query:
-        users = User.objects.filter(email__icontains=query)
+        users = User.objects.filter(email__icontains=query).prefetch_related('route_set')
     else:
         users = User.objects.none()
     return render(request=request, template_name="runningApp/social.html", context={'users': users})
