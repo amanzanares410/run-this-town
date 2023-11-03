@@ -100,7 +100,11 @@
                         post(e.target.action, { csrfmiddlewaretoken: ["{{ csrf_token }}"], stops_list: JSON.stringify(newRouteStops)});
                     }
                     //console.log(newRouteStops[0], newRouteStops[newRouteStops.length-1]);
-                    calcRoute(newRouteStops[0], newRouteStops[newRouteStops.length-1]);
+                    let waypoints = [];
+                    for(let i = 1; i < newRouteStops.length-1; i++){
+                        waypoints.push({location: newRouteStops[i], stopover: false});
+                    }
+                    calcRoute(newRouteStops[0], newRouteStops[newRouteStops.length-1], waypoints);
                     // TODO: add call to Google Maps Routes API (has to be activated) to display route between points
                 }
                 google.maps.event.addListener(mark, 'click', (e) =>{
@@ -138,11 +142,12 @@
         map.panTo(center);
     }
 
-    function calcRoute(start, end) {
+    function calcRoute(start, end, waypoints = []) {
         const request = {
           origin: start,
           destination: end,
-          travelMode: 'WALKING'
+          travelMode: 'WALKING',
+          waypoints: waypoints,
         };
         directionsService.route(request, function(result, status) {
           if (status == 'OK') {
@@ -171,7 +176,13 @@
         }
         
         //console.log({lat: stop_list[0].lat, lng: stop_list[0].long}, {lat: stop_list[stop_list.length-1].lat, lng: stop_list[stop_list.length-1].long});
-        calcRoute({lat: stop_list[0].lat, lng: stop_list[0].long}, {lat: stop_list[stop_list.length-1].lat, lng: stop_list[stop_list.length-1].long});
+        let start = {lat: stop_list[0].lat, lng: stop_list[0].long}
+        let dest = {lat: stop_list[stop_list.length-1].lat, lng: stop_list[stop_list.length-1].long}
+        let waypoints = [];
+        for(let i = 1; i < stop_list.length-1; i++){
+            waypoints.push({location: {lat: stop_list[i].lat, lng: stop_list[i].long}, stopover: false});
+        }
+        calcRoute(start, dest, waypoints);
     {% endif %}
     
 </script>
