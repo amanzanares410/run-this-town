@@ -99,6 +99,8 @@
                         e.preventDefault();
                         post(e.target.action, { csrfmiddlewaretoken: ["{{ csrf_token }}"], stops_list: JSON.stringify(newRouteStops)});
                     }
+                    //console.log(newRouteStops[0], newRouteStops[newRouteStops.length-1]);
+                    calcRoute(newRouteStops[0], newRouteStops[newRouteStops.length-1]);
                     // TODO: add call to Google Maps Routes API (has to be activated) to display route between points
                 }
                 google.maps.event.addListener(mark, 'click', (e) =>{
