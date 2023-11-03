@@ -3,6 +3,7 @@ from django.db.models.query import QuerySet
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth import logout
 from django.contrib.auth.models import Group
@@ -122,3 +123,12 @@ def approve(request):
     route.approved = True
     route.save()
     return redirect('approve_routes')
+
+@login_required
+def create(request):
+    print(request.POST)
+    if(request.method != 'POST'):
+        return redirect('create_route')
+    stops_list = request.POST.get('stops_list')
+    print(stops_list)
+    return redirect('create_route')

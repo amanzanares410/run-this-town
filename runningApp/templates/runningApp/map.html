@@ -5,6 +5,45 @@
 <div id="map" class="full-height"></div>
 
 <script>
+
+    /**
+    * CITATION
+    * Title: posting from JS
+    * Purpose: to manipulate the dom to submit a POST request to a view from JS as if it were just from a form
+    * URL: https://stackoverflow.com/a/133997
+    */
+
+    /**
+    * sends a request to the specified url from a form. this will change the window location.
+    * @param {string} path the path to send the post request to
+    * @param {object} params the parameters to add to the url
+    * @param {string} [method=post] the method to use on the form
+    */
+
+    function post(path, params, method='post') {
+
+        // The rest of this code assumes you are not using a library.
+        // It can be made less verbose if you use one.
+        const form = document.createElement('form');
+        form.method = method;
+        form.action = path;
+    
+        for (const key in params) {
+        if (params.hasOwnProperty(key)) {
+            const hiddenField = document.createElement('input');
+            hiddenField.type = 'hidden';
+            hiddenField.name = key;
+            hiddenField.value = params[key];
+    
+            form.appendChild(hiddenField);
+        }
+        }
+    
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+
     let map;
     let newRouteStops;
 
@@ -50,11 +89,17 @@
                 newRouteStops.push({lat: lat, lng: lng});
                 if(newRouteStops.length > 1){   // TODO: may be able to optimize by only checking if length is 2
                     document.getElementById("finish-route").style.display = "block";
+                    document.getElementById("finish-route").value = JSON.stringify(newRouteStops);
+                    console.log(document.getElementById("finish-route").value);
                     console.log("displayed")
+                    document.getElementById("finish-form").onsubmit = async (e) => {
+                        e.preventDefault();
+                        post(e.target.action, { csrfmiddlewaretoken: ["{{ csrf_token }}"], stops_list: JSON.stringify(newRouteStops)});
+                    }
                     // TODO: add call to Google Maps Routes API (has to be activated) to display route between points
                 }
                 google.maps.event.addListener(mark, 'click', (e) =>{
-                    console.log("clicked");
+                    console.log("deleted");
                     newRouteStops = newRouteStops.filter((obj) => obj.lat != lat && obj.lng != lng);
                     mark.setMap(null);
                     if(newRouteStops.length < 2){
