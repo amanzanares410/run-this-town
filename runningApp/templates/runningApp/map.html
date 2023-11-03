@@ -114,6 +114,13 @@
                     if(newRouteStops.length < 2){
                         document.getElementById("finish-route").style.display = "none";
                     }
+                    else{
+                        let waypoints = [];
+                        for(let i = 1; i < newRouteStops.length-1; i++){
+                            waypoints.push({location: newRouteStops[i], stopover: false});
+                        }
+                        calcRoute(newRouteStops[0], newRouteStops[newRouteStops.length-1], waypoints);
+                    }
                     console.log(newRouteStops);
                 });
                 console.log(newRouteStops);
