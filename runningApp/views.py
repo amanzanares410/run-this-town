@@ -13,8 +13,9 @@ from django.db.models import Q
 from mysite import settings
 from django.conf import settings
 import requests
+import json
 
-from runningApp.models import Route
+from runningApp.models import Route, Stop, RouteStop
 
 
 def index(request):
@@ -129,6 +130,25 @@ def create(request):
     print(request.POST)
     if(request.method != 'POST'):
         return redirect('create_route')
-    stops_list = request.POST.get('stops_list')
+    stops_list = json.loads(request.POST.get('stops_list'))
     print(stops_list)
+
+    user_id = request.user
+    route_nate = "name"
+    route_desc = "description"
+    r = Route(user_id=user_id, route_name=route_nate, route_description=route_desc)
+    r.save()
+
+    i = 0
+    for stop in stops_list:
+        # print(stop["lat"])
+        s = Stop(latitude=stop["lat"], longitude=stop["lng"])
+        s.save()
+
+        rs = RouteStop(route_id=r, stop_id=s, stop_order=i)
+        rs.save()
+        print(s.latitude)
+        i += 1
+    
+    print(r)
     return redirect('create_route')
