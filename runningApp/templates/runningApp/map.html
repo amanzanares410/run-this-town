@@ -172,7 +172,10 @@
         directionsService.route(request, function(result, status) {
           if (status == 'OK') {
             console.log(result.routes[0].legs[0].distance.text);
-            document.getElementById("distance").innerHTML = result.routes[0].legs[0].distance.text;
+            ele = document.getElementById("distance");
+            if(ele){
+                ele.innerHTML = result.routes[0].legs[0].distance.text;
+            }
             directionsRenderer.setDirections(result);
           }
         });
