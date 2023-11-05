@@ -3,6 +3,21 @@
 <script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}"></script>
 
 <div id="map" class="full-height"></div>
+<div id="buttonContainer">
+    <button id="showLandmarksButton" class="show-landmarks-button">Show Major Landmarks</button>
+
+</div>
+
+<style>
+    #buttonContainer {
+        position: absolute;
+        top: 110px;
+        left: 10px;
+    }
+    .show-landmarks-button.active {
+        background-color: lightgreen;
+    }
+</style>
 
 <script>
 
@@ -68,6 +83,65 @@
             zoom: 13,
             mapId: '92273dc4a5f87862',
         });
+
+        var landmark1 = new google.maps.Marker({
+        position: { lat: 38.03596, lng: -78.50342 },
+        map: map,
+        title: 'The Rotunda',
+             map: null,
+    });
+
+        var landmark2 = new google.maps.Marker({
+        position: { lat: 38.030743, lng: -78.480277},
+        map: map,
+        title: 'Downtown Mall',
+             map: null,
+    });
+
+        var landmark3 = new google.maps.Marker({
+        position: { lat: 38.03178, lng:  -78.51373 },
+        map: map,
+        title: 'Scott Stadium',
+             map: null,
+    });
+        var landmark4 = new google.maps.Marker({
+        position: { lat: 38.03342, lng:  -78.52245},
+        map: map,
+        title: 'The Observatory',
+             map: null,
+    });
+        var landmark5 = new google.maps.Marker({
+        position: { lat: 38.04055, lng:  -78.50558},
+        map: map,
+        title: "Carr's Hill Field",
+             map: null,
+    });
+        var landmark6 = new google.maps.Marker({
+        position: { lat: 38.049300, lng:  -78.506048},
+        map: map,
+        title: 'Barracks',
+             map: null,
+    });
+document.getElementById('showLandmarksButton').addEventListener('click', function() {
+    if (landmark1.getMap() === null) {
+        landmark1.setMap(map);
+        landmark2.setMap(map);
+        landmark3.setMap(map);
+        landmark4.setMap(map);
+        landmark5.setMap(map);
+        landmark6.setMap(map);
+        this.classList.add('active');
+    } else {
+        landmark1.setMap(null);
+        landmark2.setMap(null);
+        landmark3.setMap(null);
+        landmark4.setMap(null);
+        landmark5.setMap(null);
+        landmark6.setMap(null);
+        this.classList.remove('active');
+    }
+});
+
         directionsRenderer.setMap(map);
 
         {% if object %}
