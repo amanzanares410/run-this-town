@@ -14,4 +14,5 @@ urlpatterns = [
     path('approve/', views.approve, name='approve'),
     path('create-route/', views.create_route, name='create_route'),
     path('create/', views.create, name='create'),
+    path('social/', views.social, name='social'),
 ]

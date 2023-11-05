@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth import logout
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
 from django.views.generic import *
 from django.db.models import Q
 
@@ -59,7 +59,6 @@ def weather_view(request):
         'units': 'imperial'
     }
     response = requests.get(base_url, params=params)
-    print(response.text)
 
     if response.status_code == 200:
         data = response.json()
@@ -73,6 +72,14 @@ def weather_view(request):
         }
 
     return render(request, 'runningApp/weather.html', context)
+
+def social(request):
+    query = request.GET.get('friend-search')
+    if query:
+        users = User.objects.filter(email__icontains=query).prefetch_related('route_set')
+    else:
+        users = User.objects.none()
+    return render(request=request, template_name="runningApp/social.html", context={'users': users})
 
 
 class Route_View(LoginRequiredMixin, ListView):
