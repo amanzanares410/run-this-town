@@ -9,6 +9,7 @@
     <div class="full-screen" style="background: var(--dark-grey); color: white; height: 94vh">
         {% include "./map.html" %}
         {% include "./detail_sidebar.html" %}
+        <p id="distance"></p>
         <form id="finish-form" action = {% url "create" %} method="post">
             {% csrf_token %}
             {% comment %} <input type="hidden" name="stops_list"> {% endcomment %}
@@ -17,7 +18,7 @@
     </div>
 
     <style>
-        #finish-route {
+        #finish-route, #distance {
             position: absolute;
             bottom: 10px;
             left: 10px;
@@ -36,6 +37,15 @@
 
         #finish-route:active {
             box-shadow: none;
+        }
+
+        #distance {
+            bottom: 50px;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            box-shadow: none;
+            cursor: default;
         }
     </style>
 

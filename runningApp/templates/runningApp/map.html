@@ -93,6 +93,7 @@
                 newRouteStops.push({lat: lat, lng: lng});
                 if(newRouteStops.length > 1){   // TODO: may be able to optimize by only checking if length is 2
                     document.getElementById("finish-route").style.display = "block";
+                    document.getElementById("distance").style.display = "flex";
                     document.getElementById("finish-route").value = JSON.stringify(newRouteStops);
                     console.log(document.getElementById("finish-route").value);
                     console.log("displayed")
@@ -170,6 +171,8 @@
         };
         directionsService.route(request, function(result, status) {
           if (status == 'OK') {
+            console.log(result.routes[0].legs[0].distance.text);
+            document.getElementById("distance").innerHTML = result.routes[0].legs[0].distance.text;
             directionsRenderer.setDirections(result);
           }
         });
