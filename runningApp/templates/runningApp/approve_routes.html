@@ -1,0 +1,100 @@
+{% extends "./admin_navbar.html" %}
+
+{% block page_content %}
+    <div class="fill flex-column" id="routes-shelf">
+        
+    {% if not page_obj %}
+        <div class="fill flex-column">
+            <h1>No Routes to Approve</h1>
+        </div>
+    {% endif %}
+    {% for route in page_obj %}
+        <div class="card flex-row">
+            <div class="this-info flex-column fill">
+                <h1>{{ route.route_name }}</h1>
+                <h3>{{ route.user_id }}</h3>
+                <p>{{ route.route_description }}</p>
+                <form action = {% url "approve" %} method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="route_id" value="{{ route.id }}">
+                    <input type="submit" value="Approve">
+                </form>
+            </div>
+            <div class="this-stops flex-column fill">
+                {% for stop in route.stops.all %}
+                    <div class="flex-column">
+                        <p class="coords">( {{ stop.latitude }}, {{ stop.longitude }} )</p>
+                    </div>
+                {% endfor %}
+                <button>View All</button>
+            </div>
+        </div>
+    {% endfor %}
+
+    {% comment "Citation" %}
+    Title: Paginating a Django Listview
+    Purpose: below span code snippet copied from django documentation to navigate between pages
+    URL: https://docs.djangoproject.com/en/4.2/topics/pagination/
+    {% endcomment %}
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a class="link" href="?page=1">&laquo; first</a>
+            <a class="link" href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a class="link" href="?page={{ page_obj.next_page_number }}">next</a>
+            <a class="link" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+
+    </div>
+
+    <style>
+        #routes-shelf {
+            background-color: var(--dark-grey);
+            top: 6vh;
+            color: white;
+            height: 94vh;
+            box-sizing: border-box;
+            gap: 2vh;
+        }
+
+        .card {
+            border: 1px solid white;
+            border-radius: 10px;
+            padding: 2vh 2vw;
+            width: 25vw;
+            gap: 2vh;
+            max-height: 20vh;
+        }
+
+        .this-info {
+            width: 50%;
+            gap: 1vh;
+        }
+
+        .this-stops {
+            width: 50%;
+            gap: 1vh;
+            overflow-y: auto;
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        div *{
+            margin: 0;
+        }
+
+        .coords{
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+{% endblock page_content %}
