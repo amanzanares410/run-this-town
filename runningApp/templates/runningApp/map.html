@@ -97,7 +97,18 @@
                     console.log("displayed")
                     document.getElementById("finish-form").onsubmit = async (e) => {
                         e.preventDefault();
-                        post(e.target.action, { csrfmiddlewaretoken: ["{{ csrf_token }}"], stops_list: JSON.stringify(newRouteStops)});
+                        title = prompt("Please enter a name for your route");
+                        console.log(title);
+                        if(title == null || title.length == 0){
+                            console.log("no title");
+                            return;
+                        }
+                        description = prompt("Please enter a description for your route");
+                        if(description == null || description.length == 0){
+                            console.log("no description");
+                            return;
+                        }
+                        post(e.target.action, { csrfmiddlewaretoken: ["{{ csrf_token }}"], stops_list: JSON.stringify(newRouteStops), title: title, description: description});
                     }
                     //console.log(newRouteStops[0], newRouteStops[newRouteStops.length-1]);
                     let waypoints = [];

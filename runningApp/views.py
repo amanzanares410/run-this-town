@@ -134,9 +134,9 @@ def create(request):
     print(stops_list)
 
     user_id = request.user
-    route_nate = "name"
-    route_desc = "description"
-    r = Route(user_id=user_id, route_name=route_nate, route_description=route_desc)
+    route_name = request.POST.get('title')
+    route_desc = request.POST.get('description')
+    r = Route(user_id=user_id, route_name=route_name, route_description=route_desc)
     r.save()
 
     i = 0
