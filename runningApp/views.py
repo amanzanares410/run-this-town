@@ -3,6 +3,7 @@ from django.db.models.query import QuerySet
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth import logout
 from django.contrib.auth.models import Group, User
@@ -12,8 +13,9 @@ from django.db.models import Q
 from mysite import settings
 from django.conf import settings
 import requests
+import json
 
-from runningApp.models import Route
+from runningApp.models import Route, Stop, RouteStop
 
 
 def index(request):
@@ -41,6 +43,9 @@ def logged_in_view(request):
 def logout_view(request):
     logout(request)
     return redirect('index')
+
+def create_route(request):
+    return render(request=request, template_name="runningApp/create_route.html", context={"GOOGLE_MAPS_API_KEY": settings.GOOGLE_MAPS_API_KEY})
 
 # def map_view(request):
 #     return render(request, template_name="runningApp/map.html")
@@ -107,6 +112,7 @@ class Route_Detail(LoginRequiredMixin, DetailView):
     
     
 class Approve_Routes(UserPassesTestMixin, LoginRequiredMixin, ListView):
+    paginate_by = 3     # https://docs.djangoproject.com/en/4.2/topics/pagination/
     template_name = 'runningApp/approve_routes.html'
     model = Route
 
@@ -126,3 +132,31 @@ def approve(request):
     route.approved = True
     route.save()
     return redirect('approve_routes')
+
+@login_required
+def create(request):
+    print(request.POST)
+    if(request.method != 'POST'):
+        return redirect('create_route')
+    stops_list = json.loads(request.POST.get('stops_list'))
+    print(stops_list)
+
+    user_id = request.user
+    route_name = request.POST.get('title')
+    route_desc = request.POST.get('description')
+    r = Route(user_id=user_id, route_name=route_name, route_description=route_desc)
+    r.save()
+
+    i = 0
+    for stop in stops_list:
+        # print(stop["lat"])
+        s = Stop(latitude=stop["lat"], longitude=stop["lng"])
+        s.save()
+
+        rs = RouteStop(route_id=r, stop_id=s, stop_order=i)
+        rs.save()
+        print(s.latitude)
+        i += 1
+    
+    print(r)
+    return redirect('create_route')

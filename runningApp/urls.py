@@ -12,5 +12,7 @@ urlpatterns = [
     path('logged-in/<int:pk>/', views.Route_Detail.as_view(), name='route_detail'),
     path('approve-routes/', views.Approve_Routes.as_view(), name='approve_routes'),
     path('approve/', views.approve, name='approve'),
+    path('create-route/', views.create_route, name='create_route'),
+    path('create/', views.create, name='create'),
     path('social/', views.social, name='social'),
 ]
