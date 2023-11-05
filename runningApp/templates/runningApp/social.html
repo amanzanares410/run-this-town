@@ -1,0 +1,30 @@
+{% extends "./base_navbar.html" %}
+{% load static %}
+
+{% block page_head %}
+    <link rel="stylesheet" href="{% static 'runningApp/social.css' %}">
+{% endblock page_head %}
+
+{% block page_content %}
+<div class="top-search-bar">
+  <form method="get">
+    <input type="text" name="friend-search" placeholder="Search for friends">
+    <button type="submit">Search</button>
+  </form>
+</div>
+<div class="content-below-search-bar">
+    {% for user in users %}
+        <p>{{ user.username }}'s routes:</p>
+        <ul>
+            {% for route in user.route_set.all %}
+                <li>{{ route.route_name }} - {{ route.route_description }}</li>
+                <!-- Display other route details here -->
+            {% empty %}
+                <li>This user has no routes.</li>
+            {% endfor %}
+        </ul>
+    {% empty %}
+        <p>No users found.</p>
+    {% endfor %}
+</div>
+{% endblock page_content %}

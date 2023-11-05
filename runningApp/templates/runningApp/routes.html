@@ -1,0 +1,18 @@
+{% extends "./base_navbar.html" %}
+
+{% block page_content %}
+    {% if not route_list %}
+        <p> no routes </p>
+    {% endif %}
+    {% for route in route_list %}
+        <p> {{ route.user_id }}</p>
+        <p> {{ route.route_name }}</p>
+        <p> {{ route.route_description }}</p>
+        <p> {{ route.approved }}</p>
+        {% for stop in route.stops.all %}
+            <p> {{ stop.latitude }}</p>
+            <p> {{ stop.longitude }}</p>        
+        {% endfor %}
+    {% endfor %}
+{% endblock page_content %}
+

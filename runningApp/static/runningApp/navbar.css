@@ -50,3 +50,7 @@ a.header-text:hover, .header-links *:hover{
     margin-top: 6vh;
     box-sizing: border-box;
 }
+
+#map-btn {
+    margin-left: 2%;
+}

@@ -3,17 +3,286 @@
 <script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}"></script>
 
 <div id="map" class="full-height"></div>
+<div id="buttonContainer">
+    <button id="showLandmarksButton" class="show-landmarks-button">Show Major Landmarks</button>
+
+</div>
+
+<style>
+    #buttonContainer {
+        position: absolute;
+        top: 110px;
+        left: 10px;
+    }
+    .show-landmarks-button.active {
+        background-color: lightgreen;
+    }
+</style>
 
 <script>
-    function initMap() {
-        var mapCenter = { lat: 38.0293, lng: -78.4767 };
 
-        var map = new google.maps.Map(document.getElementById('map'), {
+    /**
+    * CITATION
+    * Title: posting from JS
+    * Purpose: to manipulate the dom to submit a POST request to a view from JS as if it were just from a form
+    * URL: https://stackoverflow.com/a/133997
+    */
+
+    /**
+    * sends a request to the specified url from a form. this will change the window location.
+    * @param {string} path the path to send the post request to
+    * @param {object} params the parameters to add to the url
+    * @param {string} [method=post] the method to use on the form
+    */
+
+    function post(path, params, method='post') {
+
+        // The rest of this code assumes you are not using a library.
+        // It can be made less verbose if you use one.
+        const form = document.createElement('form');
+        form.method = method;
+        form.action = path;
+    
+        for (const key in params) {
+        if (params.hasOwnProperty(key)) {
+            const hiddenField = document.createElement('input');
+            hiddenField.type = 'hidden';
+            hiddenField.name = key;
+            hiddenField.value = params[key];
+    
+            form.appendChild(hiddenField);
+        }
+        }
+    
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+
+    let map;
+    let newRouteStops;
+    const directionsService = new google.maps.DirectionsService();
+    const directionsRenderer = new google.maps.DirectionsRenderer();
+
+    if(window.location.href.includes("create")){
+        newRouteStops = [];
+    }
+
+    {% comment %} const svgMarker = {
+        path: 
+        fillColor: '#E57200',
+        scale: 1,
+        anchor: new google.maps.Point(0, -20),
+    } {% endcomment %}
+    
+    function initMap() {
+        const mapCenter = { lat: 38.0293, lng: -78.4767 };
+
+        map = new google.maps.Map(document.getElementById('map'), {
             center: mapCenter,
-            zoom: 14,
+            zoom: 13,
+            mapId: '92273dc4a5f87862',
         });
+
+        var landmark1 = new google.maps.Marker({
+        position: { lat: 38.03596, lng: -78.50342 },
+        map: map,
+        title: 'The Rotunda',
+             map: null,
+    });
+
+        var landmark2 = new google.maps.Marker({
+        position: { lat: 38.030743, lng: -78.480277},
+        map: map,
+        title: 'Downtown Mall',
+             map: null,
+    });
+
+        var landmark3 = new google.maps.Marker({
+        position: { lat: 38.03178, lng:  -78.51373 },
+        map: map,
+        title: 'Scott Stadium',
+             map: null,
+    });
+        var landmark4 = new google.maps.Marker({
+        position: { lat: 38.03342, lng:  -78.52245},
+        map: map,
+        title: 'The Observatory',
+             map: null,
+    });
+        var landmark5 = new google.maps.Marker({
+        position: { lat: 38.04055, lng:  -78.50558},
+        map: map,
+        title: "Carr's Hill Field",
+             map: null,
+    });
+        var landmark6 = new google.maps.Marker({
+        position: { lat: 38.049300, lng:  -78.506048},
+        map: map,
+        title: 'Barracks',
+             map: null,
+    });
+document.getElementById('showLandmarksButton').addEventListener('click', function() {
+    if (landmark1.getMap() === null) {
+        landmark1.setMap(map);
+        landmark2.setMap(map);
+        landmark3.setMap(map);
+        landmark4.setMap(map);
+        landmark5.setMap(map);
+        landmark6.setMap(map);
+        this.classList.add('active');
+    } else {
+        landmark1.setMap(null);
+        landmark2.setMap(null);
+        landmark3.setMap(null);
+        landmark4.setMap(null);
+        landmark5.setMap(null);
+        landmark6.setMap(null);
+        this.classList.remove('active');
+    }
+});
+
+        directionsRenderer.setMap(map);
+
+        {% if object %}
+            return;
+        {% endif %}
+
+        {% if route_start_points %}
+            let rsp = {{ route_start_points }};
+            for (let i = 0; i < rsp.length; i++) {
+                const mark = addMarker(rsp[i][0], rsp[i][1], rsp[i][2]);
+                google.maps.event.addListener(mark, 'click', (e) =>{ 
+                    // console.log(fetch("/runningApp/logged-in/" + mark.id + "/"));
+                    window.location.href = "/runningApp/logged-in/" + mark.id + "/"
+                    // console.log(mark.id);
+                    // console.log( "/logged-in/" + mark.id + "/") // HARDCODED ... url resolving doesn't work with dynamic value - could make custom tag with lazy load but eh
+                });
+            }
+        {% else %}
+            google.maps.event.addListener(map, 'click', (e) =>{ 
+                const lat = e.latLng.lat();
+                const lng = e.latLng.lng();
+                const mark = addMarker(lat, lng, -1);
+                newRouteStops.push({lat: lat, lng: lng});
+                if(newRouteStops.length > 1){   // TODO: may be able to optimize by only checking if length is 2
+                    document.getElementById("finish-route").style.display = "block";
+                    document.getElementById("distance").style.display = "flex";
+                    document.getElementById("finish-route").value = JSON.stringify(newRouteStops);
+                    console.log(document.getElementById("finish-route").value);
+                    console.log("displayed")
+                    document.getElementById("finish-form").onsubmit = async (e) => {
+                        e.preventDefault();
+                        title = prompt("Please enter a name for your route");
+                        console.log(title);
+                        if(title == null || title.length == 0){
+                            console.log("no title");
+                            return;
+                        }
+                        description = prompt("Please enter a description for your route");
+                        if(description == null || description.length == 0){
+                            console.log("no description");
+                            return;
+                        }
+                        post(e.target.action, { csrfmiddlewaretoken: ["{{ csrf_token }}"], stops_list: JSON.stringify(newRouteStops), title: title, description: description});
+                    }
+                    //console.log(newRouteStops[0], newRouteStops[newRouteStops.length-1]);
+                    let waypoints = [];
+                    for(let i = 1; i < newRouteStops.length-1; i++){
+                        waypoints.push({location: newRouteStops[i], stopover: false});
+                    }
+                    calcRoute(newRouteStops[0], newRouteStops[newRouteStops.length-1], waypoints);
+                    // TODO: add call to Google Maps Routes API (has to be activated) to display route between points
+                }
+                google.maps.event.addListener(mark, 'click', (e) =>{
+                    console.log("deleted");
+                    newRouteStops = newRouteStops.filter((obj) => obj.lat != lat && obj.lng != lng);
+                    mark.setMap(null);
+                    if(newRouteStops.length < 2){
+                        document.getElementById("finish-route").style.display = "none";
+                    }
+                    else{
+                        let waypoints = [];
+                        for(let i = 1; i < newRouteStops.length-1; i++){
+                            waypoints.push({location: newRouteStops[i], stopover: false});
+                        }
+                        calcRoute(newRouteStops[0], newRouteStops[newRouteStops.length-1], waypoints);
+                    }
+                    console.log(newRouteStops);
+                });
+                console.log(newRouteStops);
+            })
+        {% endif %}        
+    }
+
+    function addMarker(lat, lng, id, url="https://static-00.iconduck.com/assets.00/runner-icon-1954x2048-w2ek49bj.png") {
+        // console.log(lat, lng, title, window);
+        const mark = new google.maps.Marker({
+            position: {lat: lat, lng: lng},
+            map: map,
+            id: id,
+            icon: {
+                url: url,
+                scaledSize: new google.maps.Size(20, 20),
+            },
+        });
+        return mark;
     }
 
     google.maps.event.addDomListener(window, 'load', initMap);
+
+    function panTo(obj){
+        const center = new google.maps.LatLng( obj.lat , obj.long);
+        map.panTo(center);
+    }
+
+    function calcRoute(start, end, waypoints = []) {
+        const request = {
+          origin: start,
+          destination: end,
+          travelMode: 'WALKING',
+          waypoints: waypoints,
+        };
+        directionsService.route(request, function(result, status) {
+          if (status == 'OK') {
+            console.log(result.routes[0].legs[0].distance.text);
+            ele = document.getElementById("distance");
+            if(ele){
+                ele.innerHTML = result.routes[0].legs[0].distance.text;
+            }
+            directionsRenderer.setDirections(result);
+          }
+        });
+      }
+
+    {% if object %}
+        console.log("hello")
+        let stop_list = [];
+        let obj;
+        {% for stop in current_stops%}
+            obj  = {id: {{stop.id}}, lat: {{ stop.latitude }}, long: {{ stop.longitude}} };
+            stop_list.push(obj);
+        {% endfor %}
+        console.log(stop_list);
+        google.maps.event.addDomListener(window, 'load', () => panTo(stop_list[0]));
+        google.maps.event.addDomListener(window, 'load', () => addCurrentStops(stop_list));
+
+        function addCurrentStops(stop_list){
+            stop_list.forEach((obj, i)=>{
+                addMarker(obj.lat, obj.long, obj.id, "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Running_icon_-_Noun_Project_17825_retouched.svg/1229px-Running_icon_-_Noun_Project_17825_retouched.svg.png");
+            })
+            // TODO: add call to Google Maps Routes API (has to be activated) to display route between points
+        }
+        
+        //console.log({lat: stop_list[0].lat, lng: stop_list[0].long}, {lat: stop_list[stop_list.length-1].lat, lng: stop_list[stop_list.length-1].long});
+        let start = {lat: stop_list[0].lat, lng: stop_list[0].long}
+        let dest = {lat: stop_list[stop_list.length-1].lat, lng: stop_list[stop_list.length-1].long}
+        let waypoints = [];
+        for(let i = 1; i < stop_list.length-1; i++){
+            waypoints.push({location: {lat: stop_list[i].lat, lng: stop_list[i].long}, stopover: false});
+        }
+        calcRoute(start, dest, waypoints);
+    {% endif %}
+    
 </script>
 
