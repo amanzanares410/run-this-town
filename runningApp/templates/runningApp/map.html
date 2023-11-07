@@ -233,6 +233,7 @@ document.getElementById('showLandmarksButton').addEventListener('click', functio
                 if(newRouteStops.length > 1){   // TODO: may be able to optimize by only checking if length is 2
                     document.getElementById("finish-route").style.display = "block";
                     document.getElementById("distance").style.display = "flex";
+                    document.getElementById("elevation_chart").style.display = "flex";
                     document.getElementById("finish-route").value = JSON.stringify(newRouteStops);
                     console.log(document.getElementById("finish-route").value);
                     console.log("displayed")
@@ -317,13 +318,11 @@ document.getElementById('showLandmarksButton').addEventListener('click', functio
                 ele.innerHTML = result.routes[0].legs[0].distance.text;
             }
             directionsRenderer.setDirections(result);
-            {% if object %}
-                // Create an ElevationService.
-                const elevator = new google.maps.ElevationService();
+            // Create an ElevationService.
+            const elevator = new google.maps.ElevationService();
 
-                // Draw the path, using the Visualization API and the Elevation service.
-                displayPathElevation(result.routes[0].overview_path, elevator, map);
-            {% endif %}
+            // Draw the path, using the Visualization API and the Elevation service.
+            displayPathElevation(result.routes[0].overview_path, elevator, map);
           }
         });
       }
