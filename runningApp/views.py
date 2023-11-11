@@ -134,6 +134,16 @@ def approve(request):
     return redirect('approve_routes')
 
 @login_required
+def delete(request):
+    if(request.method != 'POST'):
+        return redirect('approve_routes')
+    # print(request.POST)
+    route_id = request.POST.get('route_id')
+    route = Route.objects.get(id=route_id)
+    route.delete()
+    return redirect('approve_routes')
+
+@login_required
 def create(request):
     print(request.POST)
     if(request.method != 'POST'):

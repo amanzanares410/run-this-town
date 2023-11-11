@@ -9,6 +9,7 @@
     <div class="full-screen" style="background: var(--dark-grey); color: white; height: 94vh">
         {% include "./map.html" %}
         {% include "./detail_sidebar.html" %}
+        <div id="elevation_chart"></div>
         <p id="distance"></p>
         <form id="finish-form" action = {% url "create" %} method="post">
             {% csrf_token %}
@@ -18,7 +19,7 @@
     </div>
 
     <style>
-        #finish-route, #distance {
+        #finish-route, #distance, #elevation_chart {
             position: absolute;
             bottom: 10px;
             left: 10px;
@@ -39,13 +40,20 @@
             box-shadow: none;
         }
 
-        #distance {
+        #distance, #elevation_chart {
             bottom: 50px;
             justify-content: center;
             align-items: center;
             text-align: center;
             box-shadow: none;
             cursor: default;
+            box-sizing: border-box;
+        }
+
+        #elevation_chart {
+            bottom: 190px;
+            background: none;
+
         }
     </style>
 
