@@ -7,23 +7,86 @@
 
 {% block page_content %}
 <div class="top-search-bar">
-  <form method="get">
+  <form method="get" id="friend-search-form">
     <input type="text" name="friend-search" placeholder="Search for friends">
     <button type="submit">Search</button>
   </form>
 </div>
 <div class="content-below-search-bar">
     {% for user in users %}
-        <p>{{ user.username }}'s routes:</p>
-        <ul>
-            {% for route in user.route_set.all %}
-                <li>{{ route.route_name }} - {{ route.route_description }}</li>
-            {% empty %}
-                <li>This user has no routes.</li>
-            {% endfor %}
-        </ul>
+        <div class="user-section">
+            <p>
+                {% if user.username == request.user.username %}
+                    My Routes:
+                {% else %}
+                    {{ user.username }}'s routes:
+                {% endif %}
+            </p>
+            <ul>
+                {% for route in user.route_set.all %}
+                    <li>
+                        {{ route.route_name }} - {{ route.route_description }}
+                        <button class="heart-button" data-user="{{ user.username }}" data-route="{{ route.route_name }}">❤️</button>
+                    </li>
+                {% empty %}
+                    <li>This user has no routes.</li>
+                {% endfor %}
+            </ul>
+        </div>
     {% empty %}
         <p>No users found.</p>
     {% endfor %}
 </div>
+
+<div class="saved-routes-section">
+    <h2>Liked Routes</h2>
+    <ul id="saved-routes-list">
+    </ul>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const heartButtons = document.querySelectorAll(".heart-button");
+        const savedRoutesList = document.getElementById("saved-routes-list");
+        const savedRoutes = new Set();
+
+        const savedRoutesData = localStorage.getItem("savedRoutes");
+        if (savedRoutesData) {
+            const parsedData = JSON.parse(savedRoutesData);
+            parsedData.forEach(routeKey => {
+                const [user, route] = routeKey.split("-");
+                const listItem = document.createElement("li");
+                listItem.textContent = `${user}'s ${route}`;
+                listItem.setAttribute("data-key", routeKey);
+                savedRoutes.add(routeKey);
+                savedRoutesList.appendChild(listItem);
+            });
+        }
+
+        heartButtons.forEach(button => {
+            button.addEventListener("click", function() {
+                const user = this.getAttribute("data-user");
+                const route = this.getAttribute("data-route");
+                const routeKey = `${user}-${route}`;
+                const listItem = savedRoutesList.querySelector(`li[data-key="${routeKey}"]`);
+
+                if (savedRoutes.has(routeKey)) {
+                    savedRoutes.delete(routeKey);
+                    savedRoutesList.removeChild(listItem);
+                    this.classList.remove("active");
+                } else {
+                    const newListItem = document.createElement("li");
+                    newListItem.textContent = `${user}'s ${route}`;
+                    newListItem.setAttribute("data-key", routeKey);
+                    savedRoutes.add(routeKey);
+                    savedRoutesList.appendChild(newListItem);
+                    this.classList.add("active");
+                }
+
+                const updatedRoutesData = JSON.stringify(Array.from(savedRoutes));
+                localStorage.setItem("savedRoutes", updatedRoutesData);
+            });
+        });
+    });
+</script>
 {% endblock page_content %}
