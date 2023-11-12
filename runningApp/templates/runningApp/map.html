@@ -5,8 +5,9 @@
 <script src="https://www.google.com/jsapi"></script>
 
 <div id="map" class="full-height"></div>
-<div id="buttonContainer">
+<div id="buttonContainer" class="flex-column">
     <button id="showLandmarksButton" class="show-landmarks-button">Show Major Landmarks</button>
+    <button id="showFilterButton" >Filter Routes</button>
 
 </div>
 
@@ -15,39 +16,77 @@
         position: absolute;
         top: 130px;
         left: 10px;
-    }
-    .show-landmarks-button.active {
-        background-color: lightgreen;
+        gap: 10px;
     }
     #filtersWindow {
         position: absolute;
         top: 130px;
         right: 10px;
+        background-color: var(--dark-grey);
+        border-radius: 10px;
     }
     .white-text {
         color: white;
+    }
+    #filtersContainer #applyFiltersButton, #showLandmarksButton, #showFilterButton {
+        background-color: var(--dark-grey);
+        color: white;
+        border: 1px solid white;
+        padding: 5px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px 0 var(--orange);
+    }
+
+    #showLandmarksButton:hover, #applyFiltersButton:hover, #showFilterButton:hover {
+        color: white;
+        cursor: pointer;
+        box-shadow: none;
+    }
+    #showLandmarksButton:active, #filtersContainer #applyFiltersButton:active, #showFilterButton:active{
+        box-shadow: none;
+    }
+
+    #filtersContainer {
+        gap: 10px;
+        background-color: var(--dark-grey);
+        border-radius: 10px;
+    }
+
+    #filtersContainer *{
+        margin: 0;
+        padding: 0;
+        font-size: 1em;
+    }
+    #filtersContainer input{
+        margin: 0;
+        padding: 0;
     }
 </style>
 
 
 <div id="filtersWindow" hidden>
-    <div style="background-color: black; padding:10px">
+    <div id="filtersContainer" class="flex-column" style="padding:10px">
         <p class="white-text" id="numRoutesText">35 routes displayed</p>
         <p class="white-text">Filter options:</p>
-        <br>
-        <label>Elevation Difference Range:</label> <input id="elevationLowerBound" type="number"> to <input id="elevationUpperBound" type="number">
-        <br>
-        <label>Distance Range:</label> <input id="distanceLowerBound" type="number"> to <input id="distanceUpperBound" type="number">
-        <br>
+        <span><label>Elevation Difference Range:</label> <input id="elevationLowerBound" type="number"> to <input id="elevationUpperBound" type="number"></span>
+        <span><label>Distance Range:</label> <input id="distanceLowerBound" type="number"> to <input id="distanceUpperBound" type="number"></span>
         <button id="applyFiltersButton">Apply Filters</button>
     </div>
 </div>
 
 <!-- Hidden fields for distance and gradient difference -->
-<input id="gradient_difference" name="gradient_difference" value="">
-<input id="route_distance" name="route_distance" value="">
+<input id="gradient_difference" name="gradient_difference" value="" hidden>
+<input id="route_distance" name="route_distance" value="" hidden>
 
 <script>
+
+    document.getElementById("showFilterButton").addEventListener("click", function(){
+        if (document.getElementById("filtersWindow").hidden) {
+            document.getElementById("filtersWindow").hidden = false;
+        } else {
+            document.getElementById("filtersWindow").hidden = true;
+        }
+    });
     // Load the Visualization API and the columnchart package.
     // @ts-ignore TODO update to newest visualization library
     google.load("visualization", "1", { packages: ["columnchart"] });
@@ -292,7 +331,6 @@ document.getElementById('showLandmarksButton').addEventListener('click', functio
                     console.log("preliminary filtering: pushing route at index " + i + " with distance " + rsp_original[i][3] + " and gradient difference " + rsp_original[i][4]);
                 }
             }
-            document.getElementById("filtersWindow").hidden = false;
             document.getElementById("numRoutesText").innerHTML = rsp.length + " routes displayed";
             
             document.getElementById("applyFiltersButton").addEventListener("click", function(){
