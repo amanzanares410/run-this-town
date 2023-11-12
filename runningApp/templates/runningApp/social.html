@@ -3,6 +3,38 @@
 
 {% block page_head %}
     <link rel="stylesheet" href="{% static 'runningApp/social.css' %}">
+<style>
+  .routes-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Adapt the minmax values to your preference */
+    gap: 1rem; /* Spacing between boxes */
+    padding: 1rem;
+  }
+
+  .route-box {
+    border: 1px solid #ccc; /* Box border */
+    padding: 1rem;
+    background-color: #f9f9f9; /* Box background color */
+    border-radius: 10px; /* Rounded corners for the box */
+    display: flex;
+    flex-direction: column;
+  }
+
+  .route-name {
+    font-weight: bold;
+    margin-bottom: .5rem;
+  }
+
+  .route-description {
+    flex-grow: 1; /* Ensure description takes up available space */
+  }
+
+  .route-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+</style>
 {% endblock page_head %}
 
 {% block page_content %}
@@ -15,28 +47,25 @@
 <div class="content-below-search-bar">
     {% for user in users %}
         <div class="user-section">
-            <p>
-                {% if user.username == request.user.username %}
-                    My Routes:
-                {% else %}
-                    {{ user.username }}'s routes:
-                {% endif %}
-            </p>
-            <ul>
+            <p>{{ user.username }}'s routes:</p>
+            <div class="routes-container">
                 {% for route in user.route_set.all %}
-                    <li>
-                        <a href="{% url 'route_detail' route.id %}">
-                            {{ route.route_name }}
-                        </a> - {{ route.route_description }}
-                        <button class="heart-button" data-user="{{ user.username }}" data-route="{{ route.route_name }}">❤</button>
-                    </li>
+                    <div class="route-box">
+                        <div class="route-name">{{ route.route_name }}</div>
+                        <div class="route-description">{{ route.route_description }}</div>
+                        <div class="route-distance">Distance: {{ route.distance }}</div>
+                        <div class="route-actions">
+                            <button class="heart-button" data-user="{{ user.username }}" data-route="{{ route.route_name }}">❤️</button>
+                            <a href="{% url 'route_detail' route.id %}" class="view-route">View Route</a>
+                        </div>
+                    </div>
                 {% empty %}
-                    <li>This user has no routes.</li>
+                    <p>This user has no routes.</p>
                 {% endfor %}
-            </ul>
+            </div>
         </div>
     {% empty %}
-        <p>No users found.</p>
+        <p>Enter an email!</p>
     {% endfor %}
 </div>
 
