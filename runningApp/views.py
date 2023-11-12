@@ -160,11 +160,19 @@ def create(request):
         # Handle the error if gradient difference is not a valid float
         # You might want to return an error message or similar
         return JsonResponse({'error': 'Invalid gradient difference value'}, status=400)
+    
+
+    # Parse distance and convert to float
+    try:
+        distance = float(request.POST.get('distance', 0))  # default to 0 if not found
+    except ValueError:
+        # Handle invalid float conversion
+        return JsonResponse({'error': 'Invalid distance value'}, status=400)
 
     user_id = request.user
     route_name = request.POST.get('title')
     route_desc = request.POST.get('description')
-    r = Route(user_id=user_id, route_name=route_name, route_description=route_desc, gradient_range=gradient_difference)
+    r = Route(user_id=user_id, route_name=route_name, route_description=route_desc, distance=distance, gradient_range=gradient_difference)
     r.save()
 
     i = 0
