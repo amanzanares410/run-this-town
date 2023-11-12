@@ -15,7 +15,13 @@
 <div class="content-below-search-bar">
     {% for user in users %}
         <div class="user-section">
-            <p>{{ user.username }}'s routes:</p>
+            <p>
+                {% if user.username == request.user.username %}
+                    My Routes:
+                {% else %}
+                    {{ user.username }}'s routes:
+                {% endif %}
+            </p>
             <ul>
                 {% for route in user.route_set.all %}
                     <li>
