@@ -302,48 +302,37 @@ document.getElementById('showLandmarksButton').addEventListener('click', functio
                 let lowerBoundDist = document.getElementById("distanceLowerBound").value;
                 let upperBoundDist = document.getElementById("distanceUpperBound").value;
 
+                if (lowerBoundElevationRange <= 0 || isNaN(lowerBoundElevationRange) || lowerBoundElevationRange >= upperBoundElevationRange) {
+                    lowerBoundElevationRange = 0;
+                }
+
+                if (lowerBoundDist <= 0 || isNaN(lowerBoundDist) || lowerBoundDist >= upperBoundDist) {
+                    lowerBoundDist = 0;
+                }
+
+                if (isNaN(upperBoundElevationRange)) {
+                    upperBoundElevationRange = Number.MAX_SAFE_INTEGER;
+                }
+
+                if (isNaN(upperBoundDist)) {
+                    upperBoundDist = Number.MAX_SAFE_INTEGER;
+                }
+
                 rsp = [];
+                // filter routes by distance and elevation difference
                 for (let i = 0; i < rsp_original.length; i++) {
-                    
                     if (rsp_original[i][3] > lowerBoundDist && rsp_original[i][3] < upperBoundDist && rsp_original[i][4] > lowerBoundElevationRange && rsp_original[i][4] < upperBoundElevationRange) {
                         rsp.push(rsp_original[i]);
                         console.log("pushing route at index " + i + " with distance " + rsp_original[i][3] + " and gradient difference " + rsp_original[i][4])
-                    } else {
-                        // console.log("ommitted route at index " + i + " with distance " + rsp_original[i][3] + " and gradient difference " + rsp_original[i][4])
                     }
                 }
                 document.getElementById("numRoutesText").innerHTML = rsp.length + " routes displayed after filtering";
 
-                console.log("clear the markers: "  + markers);
-                // Clear the markers
-                for (var i = 0; i < markers.length; i++) {
-                    markers[i].setMap(null);
-                }
-                markers = [];
-
-                console.log("add back the markers we want");
-                // add back the markers we want
-                for (let i = 0; i < rsp.length; i++) {
-                    const mark = addMarker(rsp[i][0], rsp[i][1], rsp[i][2]);
-                    google.maps.event.addListener(mark, 'click', (e) =>{ 
-                        // console.log(fetch("/runningApp/logged-in/" + mark.id + "/"));
-                        window.location.href = "/runningApp/logged-in/" + mark.id + "/"
-                        // console.log(mark.id);
-                        // console.log( "/logged-in/" + mark.id + "/") // HARDCODED ... url resolving doesn't work with dynamic value - could make custom tag with lazy load but eh
-                    });
-                }
-
+                clearMarkers(); // clear the markers
+                addMarkersFromRsp(rsp);j // add back the markers we want
             });
             // add back the markers we want
-            for (let i = 0; i < rsp.length; i++) {
-                const mark = addMarker(rsp[i][0], rsp[i][1], rsp[i][2]);
-                google.maps.event.addListener(mark, 'click', (e) =>{ 
-                    // console.log(fetch("/runningApp/logged-in/" + mark.id + "/"));
-                    window.location.href = "/runningApp/logged-in/" + mark.id + "/"
-                    // console.log(mark.id);
-                    // console.log( "/logged-in/" + mark.id + "/") // HARDCODED ... url resolving doesn't work with dynamic value - could make custom tag with lazy load but eh
-                });
-            }
+            addMarkersFromRsp(rsp);
         {% else %}
             google.maps.event.addListener(map, 'click', (e) =>{ 
                 const lat = e.latLng.lat();
@@ -405,6 +394,18 @@ document.getElementById('showLandmarksButton').addEventListener('click', functio
         {% endif %}        
     }
 
+    function addMarkersFromRsp(rsp) {
+        for (let i = 0; i < rsp.length; i++) {
+            const mark = addMarker(rsp[i][0], rsp[i][1], rsp[i][2]);
+            google.maps.event.addListener(mark, 'click', (e) =>{ 
+                // console.log(fetch("/runningApp/logged-in/" + mark.id + "/"));
+                window.location.href = "/runningApp/logged-in/" + mark.id + "/"
+                // console.log(mark.id);
+                // console.log( "/logged-in/" + mark.id + "/") // HARDCODED ... url resolving doesn't work with dynamic value - could make custom tag with lazy load but eh
+            });
+        }
+    }
+
     function addMarker(lat, lng, id, url="https://static-00.iconduck.com/assets.00/runner-icon-1954x2048-w2ek49bj.png") {
         // console.log(lat, lng, title, window);
         const mark = new google.maps.Marker({
@@ -461,7 +462,13 @@ document.getElementById('showLandmarksButton').addEventListener('click', functio
             displayPathElevation(result.routes[0].overview_path, elevator, map);
           }
         });
-      }
+    }
+
+    function clearMarkers() {
+        for (var i = 0; i < markers.length; i++) {
+            markers[i].setMap(null);
+        }
+    }
 
     {% if object %}
         console.log("hello")
