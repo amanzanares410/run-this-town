@@ -276,6 +276,8 @@ document.getElementById('showLandmarksButton').addEventListener('click', functio
                     console.log("displayed")
                     document.getElementById("finish-form").onsubmit = async (e) => {
                         e.preventDefault();
+                         let gradient_difference = document.getElementById('gradient_difference').value; // This assumes you have already calculated and set the value in this hidden field
+
                         title = prompt("Please enter a name for your route");
                         console.log(title);
                         if(title == null || title.length == 0){
@@ -287,7 +289,7 @@ document.getElementById('showLandmarksButton').addEventListener('click', functio
                             console.log("no description");
                             return;
                         }
-                        post(e.target.action, { csrfmiddlewaretoken: ["{{ csrf_token }}"], stops_list: JSON.stringify(newRouteStops), title: title, description: description});
+                        post(e.target.action, { csrfmiddlewaretoken: ["{{ csrf_token }}"], stops_list: JSON.stringify(newRouteStops), title: title, description: description, gradient_difference: gradient_difference});
                     }
                     //console.log(newRouteStops[0], newRouteStops[newRouteStops.length-1]);
                     let waypoints = [];
