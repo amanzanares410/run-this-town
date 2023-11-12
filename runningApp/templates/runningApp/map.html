@@ -21,6 +21,10 @@
     }
 </style>
 
+<!-- Hidden fields for distance and gradient difference -->
+<input type="hidden" id="gradient_difference" name="gradient_difference" value="">
+<input type="hidden" id="route_distance" name="route_distance" value="">
+
 <script>
     // Load the Visualization API and the columnchart package.
     // @ts-ignore TODO update to newest visualization library
@@ -289,7 +293,7 @@ document.getElementById('showLandmarksButton').addEventListener('click', functio
                             console.log("no description");
                             return;
                         }
-                        post(e.target.action, { csrfmiddlewaretoken: ["{{ csrf_token }}"], stops_list: JSON.stringify(newRouteStops), title: title, description: description, gradient_difference: gradient_difference});
+                        post(e.target.action, { csrfmiddlewaretoken: ["{{ csrf_token }}"], stops_list: JSON.stringify(newRouteStops), title: title, description: description, distance: distance, gradient_difference: gradient_difference});
                     }
                     //console.log(newRouteStops[0], newRouteStops[newRouteStops.length-1]);
                     let waypoints = [];
