@@ -14,17 +14,62 @@
 </div>
 <div class="content-below-search-bar">
     {% for user in users %}
-        <p>{{ user.username }}'s routes:</p>
-        <ul>
-            {% for route in user.route_set.all %}
-                <li>{{ route.route_name }} - {{ route.route_description }}</li>
-                <!-- Display other route details here -->
-            {% empty %}
-                <li>This user has no routes.</li>
-            {% endfor %}
-        </ul>
+        <div class="user-section">
+            <p>{{ user.username }}'s routes:</p>
+            <ul>
+                {% for route in user.route_set.all %}
+                    <li>
+                        {{ route.route_name }} - {{ route.route_description }}
+                        <button class="heart-button" data-user="{{ user.username }}" data-route="{{ route.route_name }}">❤️</button>
+                    </li>
+                {% empty %}
+                    <li>This user has no routes.</li>
+                {% endfor %}
+            </ul>
+        </div>
     {% empty %}
         <p>No users found.</p>
     {% endfor %}
 </div>
+<div class="saved-routes-section">
+    <h2>Saved Routes</h2>
+    <ul id="saved-routes-list">
+    </ul>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const heartButtons = document.querySelectorAll(".heart-button");
+        const savedRoutesList = document.getElementById("saved-routes-list");
+        const savedRoutes = new Set(); // Keep track of saved routes
+
+        heartButtons.forEach(button => {
+            button.addEventListener("click", function() {
+                const user = this.getAttribute("data-user");
+                const route = this.getAttribute("data-route");
+                const routeKey = `${user}-${route}`;
+                const listItem = savedRoutesList.querySelector(`li[data-key="${routeKey}"]`);
+
+                if (savedRoutes.has(routeKey)) {
+                    // If route is already saved, remove it
+                    savedRoutes.delete(routeKey);
+                    savedRoutesList.removeChild(listItem);
+
+                    // Toggle button color
+                    this.classList.remove("active");
+                } else {
+                    // If route is not saved, add it
+                    const newListItem = document.createElement("li");
+                    newListItem.textContent = `${user}'s ${route}`;
+                    newListItem.setAttribute("data-key", routeKey);
+                    savedRoutes.add(routeKey);
+                    savedRoutesList.appendChild(newListItem);
+
+                    // Toggle button color
+                    this.classList.add("active");
+                }
+            });
+        });
+    });
+</script>
 {% endblock page_content %}
