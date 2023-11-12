@@ -310,13 +310,18 @@ document.getElementById('showLandmarksButton').addEventListener('click', functio
                     lowerBoundDist = 0;
                 }
 
-                if (isNaN(upperBoundElevationRange)) {
+                if (isNaN(upperBoundElevationRange) || upperBoundElevationRange == "") {
                     upperBoundElevationRange = Number.MAX_SAFE_INTEGER;
                 }
 
-                if (isNaN(upperBoundDist)) {
+                if (isNaN(upperBoundDist) || upperBoundDist == "") {
                     upperBoundDist = Number.MAX_SAFE_INTEGER;
                 }
+
+                console.log("lowerBoundElevationRange: " + lowerBoundElevationRange);
+                console.log("upperBoundElevationRange: " + upperBoundElevationRange);
+                console.log("lowerBoundDist: " + lowerBoundDist);
+                console.log("upperBoundDist: " + upperBoundDist);
 
                 rsp = [];
                 // filter routes by distance and elevation difference
@@ -329,7 +334,7 @@ document.getElementById('showLandmarksButton').addEventListener('click', functio
                 document.getElementById("numRoutesText").innerHTML = rsp.length + " routes displayed after filtering";
 
                 clearMarkers(); // clear the markers
-                addMarkersFromRsp(rsp);j // add back the markers we want
+                addMarkersFromRsp(rsp); // add back the markers we want
             });
             // add back the markers we want
             addMarkersFromRsp(rsp);
