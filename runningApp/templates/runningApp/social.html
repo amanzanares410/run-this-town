@@ -18,7 +18,6 @@
         <ul>
             {% for route in user.route_set.all %}
                 <li>{{ route.route_name }} - {{ route.route_description }}</li>
-                <!-- Display other route details here -->
             {% empty %}
                 <li>This user has no routes.</li>
             {% endfor %}
