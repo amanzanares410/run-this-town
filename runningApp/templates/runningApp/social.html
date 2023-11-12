@@ -7,7 +7,7 @@
 
 {% block page_content %}
 <div class="top-search-bar">
-  <form method="get">
+  <form method="get" id="friend-search-form">
     <input type="text" name="friend-search" placeholder="Search for friends">
     <button type="submit">Search</button>
   </form>
@@ -31,9 +31,11 @@
         <p>No users found.</p>
     {% endfor %}
 </div>
+
 <div class="saved-routes-section">
     <h2>Saved Routes</h2>
     <ul id="saved-routes-list">
+        <!-- Display saved routes here -->
     </ul>
 </div>
 
@@ -42,6 +44,20 @@
         const heartButtons = document.querySelectorAll(".heart-button");
         const savedRoutesList = document.getElementById("saved-routes-list");
         const savedRoutes = new Set(); // Keep track of saved routes
+
+        // Load saved routes from local storage if available
+        const savedRoutesData = localStorage.getItem("savedRoutes");
+        if (savedRoutesData) {
+            const parsedData = JSON.parse(savedRoutesData);
+            parsedData.forEach(routeKey => {
+                const [user, route] = routeKey.split("-");
+                const listItem = document.createElement("li");
+                listItem.textContent = `${user}'s ${route}`;
+                listItem.setAttribute("data-key", routeKey);
+                savedRoutes.add(routeKey);
+                savedRoutesList.appendChild(listItem);
+            });
+        }
 
         heartButtons.forEach(button => {
             button.addEventListener("click", function() {
@@ -68,8 +84,13 @@
                     // Toggle button color
                     this.classList.add("active");
                 }
+
+                // Save updated saved routes to local storage
+                const updatedRoutesData = JSON.stringify(Array.from(savedRoutes));
+                localStorage.setItem("savedRoutes", updatedRoutesData);
             });
         });
+
     });
 </script>
 {% endblock page_content %}
