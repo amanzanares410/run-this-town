@@ -1,0 +1,49 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Runserver",
+            "type": "python",
+            "request": "launch",
+            "program": "manage.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": ["runserver"],
+            "env": {
+                "DJANGO_SETTINGS_MODULE": "mysite.settings",
+                "DATABASE_URL":"postgres://eaxhdptymyivvf:9f318c5c6dff3721ec3f09e7553ee4aa8b710b0b977211b5568bb6dcf0ae3663@ec2-44-215-211-215.compute-1.amazonaws.com:5432/d9osbi4cics0co",
+                "DJANGO_DEVELOPMENT":"true",
+                "DB_USER":"eaxhdptymyivvf",
+                "DB_PASSWORD":"9f318c5c6dff3721ec3f09e7553ee4aa8b710b0b977211b5568bb6dcf0ae3663",
+                "DJANGO_DEBUG":"true",
+                "GOOGLE_MAPS_API_KEY":"AIzaSyDgwnmZRetNNXzKge7VRGszaN5HPUeNnvw"
+            }
+        },
+        {
+            "name": "Django",
+            "type": "python",
+            "django": true,
+            "request": "launch",
+            "stopOnEntry": false,
+            "justMyCode": true,
+            "program": "${workspaceRoot}/manage.py",
+            "args": [
+                "runserver",
+                "--no-color",
+                "--noreload"
+            ],
+            "env": {
+                "DJANGO_SETTINGS_MODULE": "mysite.settings",
+                "DATABASE_URL":"postgres://eaxhdptymyivvf:9f318c5c6dff3721ec3f09e7553ee4aa8b710b0b977211b5568bb6dcf0ae3663@ec2-44-215-211-215.compute-1.amazonaws.com:5432/d9osbi4cics0co",
+                "DJANGO_DEVELOPMENT":"true",
+                "DB_USER":"eaxhdptymyivvf",
+                "DB_PASSWORD":"9f318c5c6dff3721ec3f09e7553ee4aa8b710b0b977211b5568bb6dcf0ae3663",
+                "DJANGO_DEBUG":"true",
+                "GOOGLE_MAPS_API_KEY":"AIzaSyDgwnmZRetNNXzKge7VRGszaN5HPUeNnvw"
+            }
+        }
+    ]
+}

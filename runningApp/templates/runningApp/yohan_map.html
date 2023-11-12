@@ -5,9 +5,8 @@
 <script src="https://www.google.com/jsapi"></script>
 
 <div id="map" class="full-height"></div>
-<div id="buttonContainer" class="flex-column">
+<div id="buttonContainer">
     <button id="showLandmarksButton" class="show-landmarks-button">Show Major Landmarks</button>
-    <button id="showFilterButton" >Filter Routes</button>
 
 </div>
 
@@ -16,81 +15,20 @@
         position: absolute;
         top: 130px;
         left: 10px;
-        gap: 10px;
     }
-    #filtersWindow {
-        position: absolute;
-        top: 130px;
-        right: 10px;
-        background-color: var(--dark-grey);
-        border-radius: 10px;
-    }
-    .white-text {
-        color: white;
-    }
-    #filtersContainer #applyFiltersButton, #showLandmarksButton, #showFilterButton {
-        background-color: var(--dark-grey);
-        color: white;
-        border: 1px solid white;
-        padding: 5px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px 0 var(--orange);
-    }
-
-    #showLandmarksButton:hover, #applyFiltersButton:hover, #showFilterButton:hover {
-        color: white;
-        cursor: pointer;
-        box-shadow: none;
-    }
-    #showLandmarksButton:active, #filtersContainer #applyFiltersButton:active, #showFilterButton:active{
-        box-shadow: none;
-    }
-
-    #filtersContainer {
-        gap: 10px;
-        background-color: var(--dark-grey);
-        border-radius: 10px;
-    }
-
-    #filtersContainer *{
-        margin: 0;
-        padding: 0;
-        font-size: 1em;
-    }
-    #filtersContainer input{
-        margin: 0;
-        padding: 0;
+    .show-landmarks-button.active {
+        background-color: lightgreen;
     }
 </style>
 
-
-<div id="filtersWindow" hidden>
-    <div id="filtersContainer" class="flex-column" style="padding:10px">
-        <p class="white-text" id="numRoutesText">35 routes displayed</p>
-        <p class="white-text">Filter options:</p>
-        <span><label>Elevation Difference Range:</label> <input id="elevationLowerBound" type="number"> to <input id="elevationUpperBound" type="number"></span>
-        <span><label>Distance Range:</label> <input id="distanceLowerBound" type="number"> to <input id="distanceUpperBound" type="number"></span>
-        <button id="applyFiltersButton">Apply Filters</button>
-    </div>
-</div>
-
 <!-- Hidden fields for distance and gradient difference -->
-<input id="gradient_difference" name="gradient_difference" value="" hidden>
-<input id="route_distance" name="route_distance" value="" hidden>
+<input id="gradient_difference" name="gradient_difference" value="">
+<input id="route_distance" name="route_distance" value="">
 
 <script>
-
-    document.getElementById("showFilterButton").addEventListener("click", function(){
-        if (document.getElementById("filtersWindow").hidden) {
-            document.getElementById("filtersWindow").hidden = false;
-        } else {
-            document.getElementById("filtersWindow").hidden = true;
-        }
-    });
     // Load the Visualization API and the columnchart package.
     // @ts-ignore TODO update to newest visualization library
     google.load("visualization", "1", { packages: ["columnchart"] });
-    let markers = [];
 
     /**
     * CITATION
@@ -177,8 +115,7 @@
     const gradientDifference = maxElevation - minElevation;
 
    // Or if submitting this value through a for  could set it on a hidden input field:
-    document.getElementById('gradient_difference').value = gradientDifference;
-    console.log("gradient difference: " + gradientDifference);
+     document.getElementById('gradient_difference').value = gradientDifference;
 
     // Draw the chart using the data within its DIV.
     chart.draw(data, {
@@ -318,64 +255,16 @@ document.getElementById('showLandmarksButton').addEventListener('click', functio
         {% endif %}
 
         {% if route_start_points %}
-            console.log("route start points if-statement");
-            let rsp_original = {{ route_start_points }};
-            let rsp = [];
-            console.log("rsp_original: " + rsp_original);
-            console.log("rsp_original first element: " + rsp_original[0]);
-            // distance = rsp_original[0][4]; // gradient difference
-            // filter to only include routes longer than 0 distance
-            for (let i = 0; i < rsp_original.length; i++) {
-                if (rsp_original[i][3] > 0) {
-                    rsp.push(rsp_original[i]);
-                    console.log("preliminary filtering: pushing route at index " + i + " with distance " + rsp_original[i][3] + " and gradient difference " + rsp_original[i][4]);
-                }
+            let rsp = {{ route_start_points }};
+            for (let i = 0; i < rsp.length; i++) {
+                const mark = addMarker(rsp[i][0], rsp[i][1], rsp[i][2]);
+                google.maps.event.addListener(mark, 'click', (e) =>{ 
+                    // console.log(fetch("/runningApp/logged-in/" + mark.id + "/"));
+                    window.location.href = "/runningApp/logged-in/" + mark.id + "/"
+                    // console.log(mark.id);
+                    // console.log( "/logged-in/" + mark.id + "/") // HARDCODED ... url resolving doesn't work with dynamic value - could make custom tag with lazy load but eh
+                });
             }
-            document.getElementById("numRoutesText").innerHTML = rsp.length + " routes displayed";
-            
-            document.getElementById("applyFiltersButton").addEventListener("click", function(){
-                console.log("apply filters button clicked")
-                let lowerBoundElevationRange = document.getElementById("elevationLowerBound").value;
-                let upperBoundElevationRange = document.getElementById("elevationUpperBound").value;
-                let lowerBoundDist = document.getElementById("distanceLowerBound").value;
-                let upperBoundDist = document.getElementById("distanceUpperBound").value;
-
-                if (lowerBoundElevationRange <= 0 || isNaN(lowerBoundElevationRange) || lowerBoundElevationRange >= upperBoundElevationRange) {
-                    lowerBoundElevationRange = 0;
-                }
-
-                if (lowerBoundDist <= 0 || isNaN(lowerBoundDist) || lowerBoundDist >= upperBoundDist) {
-                    lowerBoundDist = 0;
-                }
-
-                if (isNaN(upperBoundElevationRange) || upperBoundElevationRange == "") {
-                    upperBoundElevationRange = Number.MAX_SAFE_INTEGER;
-                }
-
-                if (isNaN(upperBoundDist) || upperBoundDist == "") {
-                    upperBoundDist = Number.MAX_SAFE_INTEGER;
-                }
-
-                console.log("lowerBoundElevationRange: " + lowerBoundElevationRange);
-                console.log("upperBoundElevationRange: " + upperBoundElevationRange);
-                console.log("lowerBoundDist: " + lowerBoundDist);
-                console.log("upperBoundDist: " + upperBoundDist);
-
-                rsp = [];
-                // filter routes by distance and elevation difference
-                for (let i = 0; i < rsp_original.length; i++) {
-                    if (rsp_original[i][3] > lowerBoundDist && rsp_original[i][3] < upperBoundDist && rsp_original[i][4] > lowerBoundElevationRange && rsp_original[i][4] < upperBoundElevationRange) {
-                        rsp.push(rsp_original[i]);
-                        console.log("pushing route at index " + i + " with distance " + rsp_original[i][3] + " and gradient difference " + rsp_original[i][4])
-                    }
-                }
-                document.getElementById("numRoutesText").innerHTML = rsp.length + " routes displayed after filtering";
-
-                clearMarkers(); // clear the markers
-                addMarkersFromRsp(rsp); // add back the markers we want
-            });
-            // add back the markers we want
-            addMarkersFromRsp(rsp);
         {% else %}
             google.maps.event.addListener(map, 'click', (e) =>{ 
                 const lat = e.latLng.lat();
@@ -391,8 +280,7 @@ document.getElementById('showLandmarksButton').addEventListener('click', functio
                     console.log("displayed")
                     document.getElementById("finish-form").onsubmit = async (e) => {
                         e.preventDefault();
-                        let gradient_difference = document.getElementById('gradient_difference').value; // This assumes you have already calculated and set the value in this hidden field
-                        let distance = document.getElementById('route_distance').value; // This assumes you have already calculated and set the value in this hidden field
+                         let gradient_difference = document.getElementById('gradient_difference').value; // This assumes you have already calculated and set the value in this hidden field
 
                         title = prompt("Please enter a name for your route");
                         console.log(title);
@@ -406,7 +294,6 @@ document.getElementById('showLandmarksButton').addEventListener('click', functio
                             return;
                         }
                         post(e.target.action, { csrfmiddlewaretoken: ["{{ csrf_token }}"], stops_list: JSON.stringify(newRouteStops), title: title, description: description, distance: distance, gradient_difference: gradient_difference});
-                        console.log("posted with gradient difference: " + gradient_difference);
                     }
                     //console.log(newRouteStops[0], newRouteStops[newRouteStops.length-1]);
                     let waypoints = [];
@@ -437,18 +324,6 @@ document.getElementById('showLandmarksButton').addEventListener('click', functio
         {% endif %}        
     }
 
-    function addMarkersFromRsp(rsp) {
-        for (let i = 0; i < rsp.length; i++) {
-            const mark = addMarker(rsp[i][0], rsp[i][1], rsp[i][2]);
-            google.maps.event.addListener(mark, 'click', (e) =>{ 
-                // console.log(fetch("/runningApp/logged-in/" + mark.id + "/"));
-                window.location.href = "/runningApp/logged-in/" + mark.id + "/"
-                // console.log(mark.id);
-                // console.log( "/logged-in/" + mark.id + "/") // HARDCODED ... url resolving doesn't work with dynamic value - could make custom tag with lazy load but eh
-            });
-        }
-    }
-
     function addMarker(lat, lng, id, url="https://static-00.iconduck.com/assets.00/runner-icon-1954x2048-w2ek49bj.png") {
         // console.log(lat, lng, title, window);
         const mark = new google.maps.Marker({
@@ -460,7 +335,6 @@ document.getElementById('showLandmarksButton').addEventListener('click', functio
                 scaledSize: new google.maps.Size(20, 20),
             },
         });
-        markers.push(mark);
         return mark;
     }
 
@@ -487,7 +361,6 @@ document.getElementById('showLandmarksButton').addEventListener('click', functio
                 totalDistance += routeLegs[i].distance.value; // distance in meters
             }
             totalDistance = totalDistance / 1000; // convert to kilometers
-            totalDistance = totalDistance / 1.609; // convert to miles
 
             // Set total distance to hidden input
             document.getElementById('route_distance').value = totalDistance;
@@ -506,13 +379,7 @@ document.getElementById('showLandmarksButton').addEventListener('click', functio
             displayPathElevation(result.routes[0].overview_path, elevator, map);
           }
         });
-    }
-
-    function clearMarkers() {
-        for (var i = 0; i < markers.length; i++) {
-            markers[i].setMap(null);
-        }
-    }
+      }
 
     {% if object %}
         console.log("hello")
@@ -550,3 +417,4 @@ document.getElementById('showLandmarksButton').addEventListener('click', functio
     {% endif %}
     
 </script>
+
