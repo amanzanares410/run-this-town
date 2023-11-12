@@ -25,7 +25,7 @@
             <ul>
                 {% for route in user.route_set.all %}
                     <li>
-                        <a href="javascript:void(0);" onclick="showRouteDetails('{{ route.route_name }}', '{{ route.route_description }}')">
+                        <a href="{% url 'route_detail' route.id %}">
                             {{ route.route_name }}
                         </a> - {{ route.route_description }}
                         <button class="heart-button" data-user="{{ user.username }}" data-route="{{ route.route_name }}">❤</button>

@@ -16,4 +16,5 @@ urlpatterns = [
     path('create/', views.create, name='create'),
     path('social/', views.social, name='social'),
     path('delete/', views.delete, name='delete'),
+    path('route/<int:pk>/', views.Route_Detail.as_view(), name='route_detail')
 ]
