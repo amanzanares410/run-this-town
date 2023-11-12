@@ -59,31 +59,68 @@
       
       // Takes an array of ElevationResult objects, draws the path on the map
       // and plots the elevation profile on a Visualization API ColumnChart.
-      function plotElevation({ results }) {
-        const chartDiv = document.getElementById("elevation_chart");
-        // Create a new chart in the elevation_chart DIV.
-        const chart = new google.visualization.ColumnChart(chartDiv);
-        // Extract the data from which to populate the chart.
-        // Because the samples are equidistant, the 'Sample'
-        // column here does double duty as distance along the
-        // X axis.
-        const data = new google.visualization.DataTable();
+    //   function plotElevation({ results }) {
+    //     const chartDiv = document.getElementById("elevation_chart");
+    //     // Create a new chart in the elevation_chart DIV.
+    //     const chart = new google.visualization.ColumnChart(chartDiv);
+    //     // Extract the data from which to populate the chart.
+    //     // Because the samples are equidistant, the 'Sample'
+    //     // column here does double duty as distance along the
+    //     // X axis.
+    //     const data = new google.visualization.DataTable();
       
-        data.addColumn("string", "Sample");
-        data.addColumn("number", "Elevation");
+    //     data.addColumn("string", "Sample");
+    //     data.addColumn("number", "Elevation");
       
-        for (let i = 0; i < results.length; i++) {
-          data.addRow(["", results[i].elevation]);
+    //     for (let i = 0; i < results.length; i++) {
+    //       data.addRow(["", results[i].elevation]);
+    //     }
+      
+    //     // Draw the chart using the data within its DIV.
+    //     chart.draw(data, {
+    //       height: 150,
+    //       legend: "none",
+    //       // @ts-ignore TODO update to newest visualization library
+    //       titleY: "Elevation (m)",
+    //     });
+    //   }
+    function plotElevation({ results }) {
+    const chartDiv = document.getElementById("elevation_chart");
+    const chart = new google.visualization.ColumnChart(chartDiv);
+    const data = new google.visualization.DataTable();
+
+    data.addColumn("string", "Sample");
+    data.addColumn("number", "Elevation");
+
+    let maxElevation = null;
+    let minElevation = null;
+
+    for (let i = 0; i < results.length; i++) {
+        data.addRow(["", results[i].elevation]);
+        // Update max and min elevations using the current elevation value.
+        if (maxElevation === null || results[i].elevation > maxElevation) {
+            maxElevation = results[i].elevation;
         }
-      
-        // Draw the chart using the data within its DIV.
-        chart.draw(data, {
-          height: 150,
-          legend: "none",
-          // @ts-ignore TODO update to newest visualization library
-          titleY: "Elevation (m)",
-        });
-      }
+        if (minElevation === null || results[i].elevation < minElevation) {
+            minElevation = results[i].elevation;
+        }
+    }
+
+    // Once the loop is done, we have the max and min elevation values.
+    // Calculate the gradient difference.
+    const gradientDifference = maxElevation - minElevation;
+
+   // Or if submitting this value through a for  could set it on a hidden input field:
+     document.getElementById('gradient_difference').value = gradientDifference;
+
+    // Draw the chart using the data within its DIV.
+    chart.draw(data, {
+        height: 150,
+        legend: "none",
+        titleY: "Elevation (m)"
+    });
+}
+
 
 
     /**
