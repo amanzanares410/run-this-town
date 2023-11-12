@@ -164,7 +164,7 @@ def create(request):
     user_id = request.user
     route_name = request.POST.get('title')
     route_desc = request.POST.get('description')
-    r = Route(user_id=user_id, route_name=route_name, route_description=route_desc)
+    r = Route(user_id=user_id, route_name=route_name, route_description=route_desc, gradient_range=gradient_difference)
     r.save()
 
     i = 0
