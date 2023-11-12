@@ -33,9 +33,8 @@
 </div>
 
 <div class="saved-routes-section">
-    <h2>Saved Routes</h2>
+    <h2>Liked Routes</h2>
     <ul id="saved-routes-list">
-        <!-- Display saved routes here -->
     </ul>
 </div>
 
@@ -43,9 +42,8 @@
     document.addEventListener("DOMContentLoaded", function() {
         const heartButtons = document.querySelectorAll(".heart-button");
         const savedRoutesList = document.getElementById("saved-routes-list");
-        const savedRoutes = new Set(); // Keep track of saved routes
+        const savedRoutes = new Set();
 
-        // Load saved routes from local storage if available
         const savedRoutesData = localStorage.getItem("savedRoutes");
         if (savedRoutesData) {
             const parsedData = JSON.parse(savedRoutesData);
@@ -67,30 +65,22 @@
                 const listItem = savedRoutesList.querySelector(`li[data-key="${routeKey}"]`);
 
                 if (savedRoutes.has(routeKey)) {
-                    // If route is already saved, remove it
                     savedRoutes.delete(routeKey);
                     savedRoutesList.removeChild(listItem);
-
-                    // Toggle button color
                     this.classList.remove("active");
                 } else {
-                    // If route is not saved, add it
                     const newListItem = document.createElement("li");
                     newListItem.textContent = `${user}'s ${route}`;
                     newListItem.setAttribute("data-key", routeKey);
                     savedRoutes.add(routeKey);
                     savedRoutesList.appendChild(newListItem);
-
-                    // Toggle button color
                     this.classList.add("active");
                 }
 
-                // Save updated saved routes to local storage
                 const updatedRoutesData = JSON.stringify(Array.from(savedRoutes));
                 localStorage.setItem("savedRoutes", updatedRoutesData);
             });
         });
-
     });
 </script>
 {% endblock page_content %}
