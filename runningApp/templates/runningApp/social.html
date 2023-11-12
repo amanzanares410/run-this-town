@@ -40,23 +40,6 @@
     {% endfor %}
 </div>
 
-<div id="detail-viewer" class="flex-column">
-        <div id="title-bar" class="flex-row">
-            {{ object.route_name }}
-        </div>
-        <div class="flex-column fill">
-            {{ object.route_description }}
-        </div>
-        <div id="display-container" class="flex-column fill">
-            <div id="elevation_chart" class="flex-column fill">
-
-            </div>
-            <div id="distance" class="flex-column fill">
-
-            </div>
-        </div>
-</div>
-
 <div class="saved-routes-section">
     <h2>Liked Routes</h2>
     <ul id="saved-routes-list">
@@ -107,76 +90,5 @@
             });
         });
     });
-
-    function showRouteDetails(routeName, routeDescription) {
-    // Update the sidebar content
-    var sidebar = document.getElementById('detail-viewer');
-    if (sidebar) {
-        sidebar.innerHTML = `
-            <div id="title-bar" class="flex-row">
-                ${routeName}
-                <a href="#" id="close" onclick="closeSidebar()">X</a>
-            </div>
-            <div class="flex-column fill">
-                ${routeDescription}
-            </div>
-            <!-- Include other sidebar elements as needed -->
-        `;
-
-        // Show the sidebar
-        sidebar.style.display = 'block';
-    }
-    }
-
-    // Function to close the sidebar
-    function closeSidebar() {
-    var sidebar = document.getElementById('detail-viewer');
-    if (sidebar) {
-        sidebar.style.display = 'none';
-    }
-    }
 </script>
 {% endblock page_content %}
-
-
-<style>
-    #detail-viewer {
-        position: absolute;
-        top: 8vh;
-        right: 4vw;
-        width: 30vw;
-        height: 86vh;
-        background: var(--dark-grey);
-        color: white;
-        padding: 1rem;
-        overflow-y: auto;
-        z-index: 2;
-        border-radius: 10px;
-        overflow: hidden;
-    }
-
-    #close {
-        text-decoration: none;
-        color: white;
-        margin-left: auto;
-    }
-
-    #title-bar {
-        font-size: 1.5rem;
-        padding: 0.5rem;
-        border-bottom: 1px solid white;
-        width: 100%;
-    }
-
-    #display-container, #elevation_chart, #distance {
-        width: 100%;
-    }
-
-    #distance {
-        font-size: 3.5rem;
-        padding: 0.5rem;
-        text-align: center;
-        align-items: center;
-        justify-content: center;
-    }
-</style>
