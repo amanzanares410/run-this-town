@@ -350,6 +350,17 @@ document.getElementById('showLandmarksButton').addEventListener('click', functio
         };
         directionsService.route(request, function(result, status) {
           if (status == 'OK') {
+            // Calculate total distance
+            var totalDistance = 0;
+            var routeLegs = result.routes[0].legs;
+            for (var i = 0; i < routeLegs.length; i++) {
+                totalDistance += routeLegs[i].distance.value; // distance in meters
+            }
+            totalDistance = totalDistance / 1000; // convert to kilometers
+
+            // Set total distance to hidden input
+            document.getElementById('route_distance').value = totalDistance;
+
             console.log(result.routes[0].legs[0].distance.text);
             console.log(result)
             ele = document.getElementById("distance");
