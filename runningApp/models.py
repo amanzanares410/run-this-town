@@ -15,6 +15,7 @@ class Route(models.Model):
     stops = models.ManyToManyField(Stop, through='RouteStop')
     distance = models.FloatField(default=0.0) # overall route length
     gradient_range = models.FloatField(default=0.0) #difference between max and min elevation
+    is_starred = models.BooleanField(default=False)
 
 class RouteStop(models.Model):
     route_id = models.ForeignKey(Route, on_delete=models.CASCADE)

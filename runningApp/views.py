@@ -151,11 +151,10 @@ def create(request):
     stops_list = json.loads(request.POST.get('stops_list'))
     print(stops_list)
 
-    gradient_difference = request.POST.get('gradient_difference', 0)  # provide a default value if not found
 
     # Convert gradient_difference to a float
     try:
-        gradient_difference = float(gradient_difference)
+        gradient_difference = float(request.POST.get('gradient_difference', 0))  # provide a default value if not found
     except ValueError:
         # Handle the error if gradient difference is not a valid float
         # You might want to return an error message or similar

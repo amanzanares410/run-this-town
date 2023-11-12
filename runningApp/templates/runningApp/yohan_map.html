@@ -21,20 +21,6 @@
     }
 </style>
 
-
-<div id="filtersWindow" hidden>
-    <div style="background-color: black; padding:10px">
-        <p class="white-text" id="numRoutesText">35 routes displayed</p>
-        <p class="white-text">Filter options:</p>
-        <br>
-        <label>Elevation Difference Range:</label> <input id="elevationLowerBound" type="number"> to <input id="elevationUpperBound" type="number">
-        <br>
-        <label>Distance Range:</label> <input id="distanceLowerBound" type="number"> to <input id="distanceUpperBound" type="number">
-        <br>
-        <button id="applyFiltersButton">Apply Filters</button>
-    </div>
-</div>
-
 <!-- Hidden fields for distance and gradient difference -->
 <input id="gradient_difference" name="gradient_difference" value="">
 <input id="route_distance" name="route_distance" value="">
@@ -129,8 +115,7 @@
     const gradientDifference = maxElevation - minElevation;
 
    // Or if submitting this value through a for  could set it on a hidden input field:
-    document.getElementById('gradient_difference').value = gradientDifference;
-    console.log("gradient difference: " + gradientDifference);
+     document.getElementById('gradient_difference').value = gradientDifference;
 
     // Draw the chart using the data within its DIV.
     chart.draw(data, {
@@ -295,8 +280,7 @@ document.getElementById('showLandmarksButton').addEventListener('click', functio
                     console.log("displayed")
                     document.getElementById("finish-form").onsubmit = async (e) => {
                         e.preventDefault();
-                        let gradient_difference = document.getElementById('gradient_difference').value; // This assumes you have already calculated and set the value in this hidden field
-                        let distance = document.getElementById('route_distance').value; // This assumes you have already calculated and set the value in this hidden field
+                         let gradient_difference = document.getElementById('gradient_difference').value; // This assumes you have already calculated and set the value in this hidden field
 
                         title = prompt("Please enter a name for your route");
                         console.log(title);
@@ -310,7 +294,6 @@ document.getElementById('showLandmarksButton').addEventListener('click', functio
                             return;
                         }
                         post(e.target.action, { csrfmiddlewaretoken: ["{{ csrf_token }}"], stops_list: JSON.stringify(newRouteStops), title: title, description: description, distance: distance, gradient_difference: gradient_difference});
-                        console.log("posted with gradient difference: " + gradient_difference);
                     }
                     //console.log(newRouteStops[0], newRouteStops[newRouteStops.length-1]);
                     let waypoints = [];
@@ -434,3 +417,4 @@ document.getElementById('showLandmarksButton').addEventListener('click', functio
     {% endif %}
     
 </script>
+
