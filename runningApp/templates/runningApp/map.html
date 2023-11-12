@@ -19,6 +19,14 @@
     .show-landmarks-button.active {
         background-color: lightgreen;
     }
+    #filtersWindow {
+        position: absolute;
+        top: 130px;
+        right: 10px;
+    }
+    .white-text {
+        color: white;
+    }
 </style>
 
 
@@ -43,6 +51,7 @@
     // Load the Visualization API and the columnchart package.
     // @ts-ignore TODO update to newest visualization library
     google.load("visualization", "1", { packages: ["columnchart"] });
+    let markers = [];
 
     /**
     * CITATION
@@ -270,7 +279,62 @@ document.getElementById('showLandmarksButton').addEventListener('click', functio
         {% endif %}
 
         {% if route_start_points %}
-            let rsp = {{ route_start_points }};
+            console.log("route start points if-statement");
+            let rsp_original = {{ route_start_points }};
+            let rsp = [];
+            console.log("rsp_original: " + rsp_original);
+            console.log("rsp_original first element: " + rsp_original[0]);
+            // distance = rsp_original[0][4]; // gradient difference
+            // filter to only include routes longer than 0 distance
+            for (let i = 0; i < rsp_original.length; i++) {
+                if (rsp_original[i][3] > 0) {
+                    rsp.push(rsp_original[i]);
+                    console.log("preliminary filtering: pushing route at index " + i + " with distance " + rsp_original[i][3]);
+                }
+            }
+            document.getElementById("filtersWindow").hidden = false;
+            document.getElementById("numRoutesText").innerHTML = rsp.length + " routes displayed";
+            
+            document.getElementById("applyFiltersButton").addEventListener("click", function(){
+                console.log("apply filters button clicked")
+                let lowerBoundElevationRange = document.getElementById("elevationLowerBound").value;
+                let upperBoundElevationRange = document.getElementById("elevationUpperBound").value;
+                let lowerBoundDist = document.getElementById("distanceLowerBound").value;
+                let upperBoundDist = document.getElementById("distanceUpperBound").value;
+
+                rsp = [];
+                for (let i = 0; i < rsp_original.length; i++) {
+                    
+                    if (rsp_original[i][3] > lowerBoundDist && rsp_original[i][3] < upperBoundDist && rsp_original[i][4] > lowerBoundElevationRange && rsp_original[i][4] < upperBoundElevationRange) {
+                        rsp.push(rsp_original[i]);
+                        console.log("pushing route at index " + i + " with distance " + rsp_original[i][3] + " and gradient difference " + rsp_original[i][4])
+                    } else {
+                        // console.log("ommitted route at index " + i + " with distance " + rsp_original[i][3] + " and gradient difference " + rsp_original[i][4])
+                    }
+                }
+                document.getElementById("numRoutesText").innerHTML = rsp.length + " routes displayed after filtering";
+
+                console.log("clear the markers: "  + markers);
+                // Clear the markers
+                for (var i = 0; i < markers.length; i++) {
+                    markers[i].setMap(null);
+                }
+                markers = [];
+
+                console.log("add back the markers we want");
+                // add back the markers we want
+                for (let i = 0; i < rsp.length; i++) {
+                    const mark = addMarker(rsp[i][0], rsp[i][1], rsp[i][2]);
+                    google.maps.event.addListener(mark, 'click', (e) =>{ 
+                        // console.log(fetch("/runningApp/logged-in/" + mark.id + "/"));
+                        window.location.href = "/runningApp/logged-in/" + mark.id + "/"
+                        // console.log(mark.id);
+                        // console.log( "/logged-in/" + mark.id + "/") // HARDCODED ... url resolving doesn't work with dynamic value - could make custom tag with lazy load but eh
+                    });
+                }
+
+            });
+            // add back the markers we want
             for (let i = 0; i < rsp.length; i++) {
                 const mark = addMarker(rsp[i][0], rsp[i][1], rsp[i][2]);
                 google.maps.event.addListener(mark, 'click', (e) =>{ 
@@ -352,6 +416,7 @@ document.getElementById('showLandmarksButton').addEventListener('click', functio
                 scaledSize: new google.maps.Size(20, 20),
             },
         });
+        markers.push(mark);
         return mark;
     }
 
