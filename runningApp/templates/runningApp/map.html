@@ -289,7 +289,7 @@ document.getElementById('showLandmarksButton').addEventListener('click', functio
             for (let i = 0; i < rsp_original.length; i++) {
                 if (rsp_original[i][3] > 0) {
                     rsp.push(rsp_original[i]);
-                    console.log("preliminary filtering: pushing route at index " + i + " with distance " + rsp_original[i][3]);
+                    console.log("preliminary filtering: pushing route at index " + i + " with distance " + rsp_original[i][3] + " and gradient difference " + rsp_original[i][4]);
                 }
             }
             document.getElementById("filtersWindow").hidden = false;
@@ -449,6 +449,7 @@ document.getElementById('showLandmarksButton').addEventListener('click', functio
                 totalDistance += routeLegs[i].distance.value; // distance in meters
             }
             totalDistance = totalDistance / 1000; // convert to kilometers
+            totalDistance = totalDistance / 1.609; // convert to miles
 
             // Set total distance to hidden input
             document.getElementById('route_distance').value = totalDistance;
