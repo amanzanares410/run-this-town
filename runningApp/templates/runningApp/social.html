@@ -7,24 +7,170 @@
 
 {% block page_content %}
 <div class="top-search-bar">
-  <form method="get">
+  <form method="get" id="friend-search-form">
     <input type="text" name="friend-search" placeholder="Search for friends">
     <button type="submit">Search</button>
   </form>
 </div>
 <div class="content-below-search-bar">
     {% for user in users %}
-        <p>{{ user.username }}'s routes:</p>
-        <ul>
-            {% for route in user.route_set.all %}
-                <li>{{ route.route_name }} - {{ route.route_description }}</li>
-                <!-- Display other route details here -->
-            {% empty %}
-                <li>This user has no routes.</li>
-            {% endfor %}
-        </ul>
+        <div class="user-section">
+            <p>{{ user.username }}'s routes:</p>
+            <ul>
+                {% for route in user.route_set.all %}
+                    <li>
+                        <a href="javascript:void(0);" onclick="showRouteDetails('{{ route.route_name }}', '{{ route.route_description }}')">
+                            {{ route.route_name }}
+                        </a> - {{ route.route_description }}
+                        <button class="heart-button" data-user="{{ user.username }}" data-route="{{ route.route_name }}">❤</button>
+                    </li>
+                {% empty %}
+                    <li>This user has no routes.</li>
+                {% endfor %}
+            </ul>
+        </div>
     {% empty %}
         <p>No users found.</p>
     {% endfor %}
 </div>
+
+<div id="detail-viewer" class="flex-column">
+        <div id="title-bar" class="flex-row">
+            {{ object.route_name }}
+        </div>
+        <div class="flex-column fill">
+            {{ object.route_description }}
+        </div>
+        <div id="display-container" class="flex-column fill">
+            <div id="elevation_chart" class="flex-column fill">
+
+            </div>
+            <div id="distance" class="flex-column fill">
+
+            </div>
+        </div>
+</div>
+
+<div class="saved-routes-section">
+    <h2>Liked Routes</h2>
+    <ul id="saved-routes-list">
+    </ul>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const heartButtons = document.querySelectorAll(".heart-button");
+        const savedRoutesList = document.getElementById("saved-routes-list");
+        const savedRoutes = new Set();
+
+        const savedRoutesData = localStorage.getItem("savedRoutes");
+        if (savedRoutesData) {
+            const parsedData = JSON.parse(savedRoutesData);
+            parsedData.forEach(routeKey => {
+                const [user, route] = routeKey.split("-");
+                const listItem = document.createElement("li");
+                listItem.textContent = `${user}'s ${route}`;
+                listItem.setAttribute("data-key", routeKey);
+                savedRoutes.add(routeKey);
+                savedRoutesList.appendChild(listItem);
+            });
+        }
+
+        heartButtons.forEach(button => {
+            button.addEventListener("click", function() {
+                const user = this.getAttribute("data-user");
+                const route = this.getAttribute("data-route");
+                const routeKey = `${user}-${route}`;
+                const listItem = savedRoutesList.querySelector(`li[data-key="${routeKey}"]`);
+
+                if (savedRoutes.has(routeKey)) {
+                    savedRoutes.delete(routeKey);
+                    savedRoutesList.removeChild(listItem);
+                    this.classList.remove("active");
+                } else {
+                    const newListItem = document.createElement("li");
+                    newListItem.textContent = `${user}'s ${route}`;
+                    newListItem.setAttribute("data-key", routeKey);
+                    savedRoutes.add(routeKey);
+                    savedRoutesList.appendChild(newListItem);
+                    this.classList.add("active");
+                }
+
+                const updatedRoutesData = JSON.stringify(Array.from(savedRoutes));
+                localStorage.setItem("savedRoutes", updatedRoutesData);
+            });
+        });
+    });
+
+    function showRouteDetails(routeName, routeDescription) {
+    // Update the sidebar content
+    var sidebar = document.getElementById('detail-viewer');
+    if (sidebar) {
+        sidebar.innerHTML = `
+            <div id="title-bar" class="flex-row">
+                ${routeName}
+                <a href="#" id="close" onclick="closeSidebar()">X</a>
+            </div>
+            <div class="flex-column fill">
+                ${routeDescription}
+            </div>
+            <!-- Include other sidebar elements as needed -->
+        `;
+
+        // Show the sidebar
+        sidebar.style.display = 'block';
+    }
+    }
+
+    // Function to close the sidebar
+    function closeSidebar() {
+    var sidebar = document.getElementById('detail-viewer');
+    if (sidebar) {
+        sidebar.style.display = 'none';
+    }
+    }
+</script>
 {% endblock page_content %}
+
+
+<style>
+    #detail-viewer {
+        position: absolute;
+        top: 8vh;
+        right: 4vw;
+        width: 30vw;
+        height: 86vh;
+        background: var(--dark-grey);
+        color: white;
+        padding: 1rem;
+        overflow-y: auto;
+        z-index: 2;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    #close {
+        text-decoration: none;
+        color: white;
+        margin-left: auto;
+    }
+
+    #title-bar {
+        font-size: 1.5rem;
+        padding: 0.5rem;
+        border-bottom: 1px solid white;
+        width: 100%;
+    }
+
+    #display-container, #elevation_chart, #distance {
+        width: 100%;
+    }
+
+    #distance {
+        font-size: 3.5rem;
+        padding: 0.5rem;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
