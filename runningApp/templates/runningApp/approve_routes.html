@@ -14,19 +14,22 @@
                 <h1>{{ route.route_name }}</h1>
                 <h3>{{ route.user_id }}</h3>
                 <p>{{ route.route_description }}</p>
-                <form action = {% url "approve" %} method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="route_id" value="{{ route.id }}">
-                    <input type="submit" value="Approve">
-                </form>
+                <div class="forms flex-row fill">
+                    <form action = {% url "approve" %} method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="route_id" value="{{ route.id }}">
+                        <input class="action-btn" type="submit" value="Approve">
+                    </form>
+                    <form action = {% url "delete" %} method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="route_id" value="{{ route.id }}">
+                        <input class="action-btn" type="submit" value="Delete">
+                    </form>
+                </div>
+                
             </div>
             <div class="this-stops flex-column fill">
-                {% for stop in route.stops.all %}
-                    <div class="flex-column">
-                        <p class="coords">( {{ stop.latitude }}, {{ stop.longitude }} )</p>
-                    </div>
-                {% endfor %}
-                <button>View All</button>
+                <a id="view-route-btn" class="action-btn" href={% url "route_detail" pk=route.id %}>View Route</a>
             </div>
         </div>
     {% endfor %}
@@ -55,6 +58,35 @@
     </div>
 
     <style>
+
+        .link {
+            text-decoration: none;
+            color: var(--orange);
+        }
+
+        .action-btn {
+            background-color: var(--dark-grey);
+            color: white;
+            border: 1px solid white;
+            padding: 1vh 1vw;
+            border-radius: 10px;
+            box-shadow: 0 0 10px 0 var(--orange);
+        }
+
+        .action-btn:hover {
+            color: white;
+            cursor: pointer;
+            box-shadow: none;
+        }
+
+        .forms{
+            gap: 1vh;
+        }
+
+        #view-route-btn {
+            text-decoration: none;
+        } 
+
         #routes-shelf {
             background-color: var(--dark-grey);
             top: 6vh;

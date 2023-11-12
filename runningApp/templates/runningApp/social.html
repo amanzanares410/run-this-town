@@ -2,29 +2,157 @@
 {% load static %}
 
 {% block page_head %}
-    <link rel="stylesheet" href="{% static 'runningApp/social.css' %}">
+<style>
+    .top-search-bar {
+        display: flex;
+        justify-content: center;
+        padding: 10px 0;
+    }
+
+    #friend-search-form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 50%;
+        max-width: 600px;
+    }
+
+    #friend-search-form input[type="text"] {
+        flex-grow: 1;
+        padding: 10px;
+        margin-right: -4px;
+        border: 2px solid #ccc;
+        border-radius: 4px 0 0 4px;
+    }
+
+    #friend-search-form button {
+        padding: 10px;
+        border: 2px solid #ccc;
+        border-left: none;
+        border-radius: 0 4px 4px 0;
+        background-color: #f8f8f8;
+        cursor: pointer;
+    }
+
+    .routes-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem; /* Spacing between boxes */
+        padding: 1rem;
+    }
+
+    .route-box {
+        border: 1px solid #ccc;
+        padding: 1rem;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .route-name {
+        font-weight: bold;
+        margin-bottom: .5rem;
+    }
+
+    .route-description {
+        flex-grow: 1;
+    }
+
+    .route-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .user-routes-title {
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+</style>
 {% endblock page_head %}
 
 {% block page_content %}
 <div class="top-search-bar">
-  <form method="get">
+  <form method="get" id="friend-search-form">
     <input type="text" name="friend-search" placeholder="Search for friends">
     <button type="submit">Search</button>
   </form>
 </div>
 <div class="content-below-search-bar">
     {% for user in users %}
-        <p>{{ user.username }}'s routes:</p>
-        <ul>
-            {% for route in user.route_set.all %}
-                <li>{{ route.route_name }} - {{ route.route_description }}</li>
-                <!-- Display other route details here -->
-            {% empty %}
-                <li>This user has no routes.</li>
-            {% endfor %}
-        </ul>
+        <div class="user-section">
+            <p class="user-routes-title">{{ user.username | upper }}'s ROUTES:</p>
+            <div class="routes-container">
+                {% for route in user.route_set.all %}
+                    <div class="route-box">
+                        <div class="route-name">{{ route.route_name }}</div>
+                        <div class="route-description">{{ route.route_description }}</div>
+                        <div class="route-distance">Distance: {{ route.distance }}</div>
+                        <div class="route-actions">
+                            <button class="heart-button" data-user="{{ user.username }}" data-route="{{ route.route_name }}">❤️</button>
+                            <a href="{% url 'route_detail' route.id %}" class="view-route">View Route</a>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>This user has no routes.</p>
+                {% endfor %}
+            </div>
+        </div>
     {% empty %}
-        <p>No users found.</p>
+        <p class="user-routes-title">Enter an email!</p>
     {% endfor %}
 </div>
+
+<div class="saved-routes-section">
+    <h2>Liked Routes</h2>
+    <ul id="saved-routes-list">
+    </ul>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const heartButtons = document.querySelectorAll(".heart-button");
+        const savedRoutesList = document.getElementById("saved-routes-list");
+        const savedRoutes = new Set();
+
+        const savedRoutesData = localStorage.getItem("savedRoutes");
+        if (savedRoutesData) {
+            const parsedData = JSON.parse(savedRoutesData);
+            parsedData.forEach(routeKey => {
+                const [user, route] = routeKey.split("-");
+                const listItem = document.createElement("li");
+                listItem.textContent = `${user}'s ${route}`;
+                listItem.setAttribute("data-key", routeKey);
+                savedRoutes.add(routeKey);
+                savedRoutesList.appendChild(listItem);
+            });
+        }
+
+        heartButtons.forEach(button => {
+            button.addEventListener("click", function() {
+                const user = this.getAttribute("data-user");
+                const route = this.getAttribute("data-route");
+                const routeKey = `${user}-${route}`;
+                const listItem = savedRoutesList.querySelector(`li[data-key="${routeKey}"]`);
+
+                if (savedRoutes.has(routeKey)) {
+                    savedRoutes.delete(routeKey);
+                    savedRoutesList.removeChild(listItem);
+                    this.classList.remove("active");
+                } else {
+                    const newListItem = document.createElement("li");
+                    newListItem.textContent = `${user}'s ${route}`;
+                    newListItem.setAttribute("data-key", routeKey);
+                    savedRoutes.add(routeKey);
+                    savedRoutesList.appendChild(newListItem);
+                    this.classList.add("active");
+                }
+
+                const updatedRoutesData = JSON.stringify(Array.from(savedRoutes));
+                localStorage.setItem("savedRoutes", updatedRoutesData);
+            });
+        });
+    });
+</script>
 {% endblock page_content %}
