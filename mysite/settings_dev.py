@@ -1,7 +1,7 @@
 from pathlib import Path
 
 
-DEBUG = True
+DEBUG = False
 SECRET_KEY = '1'
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost','project-a-15-django-3d66f46ae005.herokuapp.com/']
 BASE_DIR = Path(__file__).resolve().parent.parent
