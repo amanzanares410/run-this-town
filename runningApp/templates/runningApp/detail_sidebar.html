@@ -6,11 +6,13 @@
         </div>
         {% if "Admin" in user.groups.all.0.name %}
             <div class="forms flex-row fill">
-                <form action = {% url "approve" %} method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="route_id" value="{{ route.id }}">
-                    <input class="action-btn" type="submit" value="Approve">
-                </form>
+                {% if not object.approved %}
+                    <form action = {% url "approve" %} method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="route_id" value="{{ route.id }}">
+                        <input class="action-btn" type="submit" value="Approve">
+                    </form>
+                {% endif %}
                 <form action = {% url "delete" %} method="post">
                     {% csrf_token %}
                     <input type="hidden" name="route_id" value="{{ route.id }}">
