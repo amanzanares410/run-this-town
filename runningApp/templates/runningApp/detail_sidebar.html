@@ -4,8 +4,22 @@
             {{ object.route_name }}
             <a href = {% url "logged_in_view" %} id="close">X</a>
         </div>
+        {% if "Admin" in user.groups.all.0.name %}
+            <div class="forms flex-row fill">
+                <form action = {% url "approve" %} method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="route_id" value="{{ route.id }}">
+                    <input class="action-btn" type="submit" value="Approve">
+                </form>
+                <form action = {% url "delete" %} method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="route_id" value="{{ route.id }}">
+                    <input class="action-btn" type="submit" value="Delete">
+                </form>
+            </div>
+        {% endif %}
         <div class="flex-column fill">
-            {{ object.route_description }}
+            {{ object.route_description }}  
         </div>
         <div id="display-container" class="flex-column fill">
             <div id="elevation_chart" class="flex-column fill">
@@ -19,6 +33,31 @@
 {% endif %}
 
 <style>
+
+    .action-btn {
+        background-color: var(--dark-grey);
+        color: white;
+        border: 1px solid white;
+        padding: 1vh 1vw;
+        border-radius: 10px;
+        box-shadow: 0 0 10px 0 var(--orange);
+    }
+
+    .action-btn:hover {
+        color: white;
+        cursor: pointer;
+        box-shadow: none;
+    }
+
+    .forms{
+        gap: 1vh;
+    }
+
+    .forms .action-btn{ 
+        width: 10cqw;
+        height: 6cqh;
+    }
+    
     #detail-viewer {
         position: absolute;
         top: 8vh;
