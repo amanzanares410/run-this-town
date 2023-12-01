@@ -2,7 +2,13 @@
     <div id="detail-viewer" class="flex-column">
         <div id="title-bar" class="flex-row">
             {{ object.route_name }}
-            <a href = {% url "logged_in_view" %} id="close">X</a>
+            {% comment %} 
+            Citation
+            * Title: Href navigate to previous page
+            * Purpose: used this stack overflow post to find the href in the a tag below
+            * URL: https://stackoverflow.com/a/8814534
+            {% endcomment %}
+            <a href = "javascript:history.back()" id="close">X</a>
         </div>
         {% if "Admin" in user.groups.all.0.name %}
             <div class="forms flex-row fill">
