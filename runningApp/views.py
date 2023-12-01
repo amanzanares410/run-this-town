@@ -186,4 +186,4 @@ def create(request):
         i += 1
     
     print(r)
-    return redirect('create_route')
+    return redirect('route_detail', pk=r.id)

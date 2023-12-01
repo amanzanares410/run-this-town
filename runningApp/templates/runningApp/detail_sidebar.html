@@ -1,3 +1,15 @@
+<script>
+    function goBack(){
+        // console.log(typeof document.referrer); 
+        if(document.referrer.includes("create")){
+            window.location = document.referrer;
+        }
+        else {
+            window.history.back();
+        }
+    }
+</script>
+
 {% if object %}
     <div id="detail-viewer" class="flex-column">
         <div id="title-bar" class="flex-row">
@@ -5,10 +17,10 @@
             {% comment %} 
             Citation
             * Title: Href navigate to previous page
-            * Purpose: used this stack overflow post to find the href in the a tag below
-            * URL: https://stackoverflow.com/a/8814534
+            * Purpose: used these two posts to figure out how to go back to previous page from a/refresh sometimes
+            * URL: https://stackoverflow.com/a/8814534, https://stackoverflow.com/a/35547598
             {% endcomment %}
-            <a href = "javascript:history.back()" id="close">X</a>
+            <a href = "#" onclick="goBack();" id="close">X</a> {% comment "" %}javascript:history.back(){% endcomment %}
         </div>
         {% if "Admin" in user.groups.all.0.name %}
             <div class="forms flex-row fill">
