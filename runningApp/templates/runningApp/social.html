@@ -89,7 +89,7 @@
                     <div class="route-box">
                         <div class="route-name">{{ route.route_name }}</div>
                         <div class="route-description">{{ route.route_description }}</div>
-                        <div class="route-distance">Distance: {{ route.distance }}</div>
+                        <div class="route-distance">Distance: {{ route.distance|floatformat:2 }}mi</div>
                         <div class="route-actions">
                             <button class="heart-button" data-user="{{ user.username }}" data-route="{{ route.route_name }}">❤️</button>
                             <a href="{% url 'route_detail' route.id %}" class="view-route">View Route</a>
