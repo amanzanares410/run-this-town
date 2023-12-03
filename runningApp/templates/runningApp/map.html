@@ -7,7 +7,9 @@
 <div id="map" class="full-height"></div>
 <div id="buttonContainer" class="flex-column">
     <button id="showLandmarksButton" class="show-landmarks-button">Show Major Landmarks</button>
-    <button id="showFilterButton" >Filter Routes</button>
+    {% if  filter_button%}
+        <button id="showFilterButton" >Filter Routes</button>
+    {% endif %}   
 
 </div>
 
@@ -68,8 +70,8 @@
     <div id="filtersContainer" class="flex-column" style="padding:10px">
         <p class="white-text" id="numRoutesText">35 routes displayed</p>
         <p class="white-text">Filter options:</p>
-        <span><label>Elevation Difference Range:</label> <input id="elevationLowerBound" type="number"> to <input id="elevationUpperBound" type="number"></span>
-        <span><label>Distance Range:</label> <input id="distanceLowerBound" type="number"> to <input id="distanceUpperBound" type="number"></span>
+        <span><label>Elevation Change Range (m):</label> <input id="elevationLowerBound" type="number"> to <input id="elevationUpperBound" type="number"></span>
+        <span><label>Distance Range (mi):</label> <input id="distanceLowerBound" type="number"> to <input id="distanceUpperBound" type="number"></span>
         <button id="applyFiltersButton">Apply Filters</button>
     </div>
 </div>
@@ -79,18 +81,21 @@
 <input id="route_distance" name="route_distance" value="" hidden>
 
 <script>
-
-    document.getElementById("showFilterButton").addEventListener("click", function(){
-        if (document.getElementById("filtersWindow").hidden) {
-            document.getElementById("filtersWindow").hidden = false;
-        } else {
-            document.getElementById("filtersWindow").hidden = true;
-        }
-    });
+    {% if filter_button %}
+        document.getElementById("showFilterButton").addEventListener("click", function(){
+            if (document.getElementById("filtersWindow").hidden) {
+                document.getElementById("filtersWindow").hidden = false;
+            } else {
+                document.getElementById("filtersWindow").hidden = true;
+            }
+        });
+    {% endif %}
+    
     // Load the Visualization API and the columnchart package.
     // @ts-ignore TODO update to newest visualization library
     google.load("visualization", "1", { packages: ["columnchart"] });
     let markers = [];
+    let polyLine = null;
 
     /**
     * CITATION
@@ -99,13 +104,21 @@
     * URL: https://developers.google.com/maps/documentation/javascript/examples/elevation-paths#maps_elevation_paths-javascript
     */
     function displayPathElevation(path, elevator, map) {
-        // Display a polyline of the elevation path.
-        new google.maps.Polyline({
-          path: path,
-          strokeColor: "#0000CC",
-          strokeOpacity: 0.4,
-          map: map,
-        });
+        directionsRenderer.setMap(map);
+        if (polyLine == null){
+            polyLine = // Display a polyline of the elevation path.
+                new google.maps.Polyline({
+                    path: path,
+                    strokeColor: "#0000CC",
+                    strokeOpacity: 0.4,
+                    map: map,
+                });
+            console.log("polyline created");
+        }
+        else{
+            polyLine.setPath(path);
+        }
+        
         // Create a PathElevationRequest object using this array.
         // Ask for 256 samples along that path.
         // Initiate the path request.
@@ -231,7 +244,7 @@
     let map;
     let newRouteStops;
     const directionsService = new google.maps.DirectionsService();
-    const directionsRenderer = new google.maps.DirectionsRenderer();
+    let directionsRenderer = new google.maps.DirectionsRenderer({suppressMarkers: window.location.href.includes("create") ? true : false});
 
     if(window.location.href.includes("create")){
         newRouteStops = [];
@@ -333,47 +346,50 @@ document.getElementById('showLandmarksButton').addEventListener('click', functio
             }
             document.getElementById("numRoutesText").innerHTML = rsp.length + " routes displayed";
             
-            document.getElementById("applyFiltersButton").addEventListener("click", function(){
-                console.log("apply filters button clicked")
-                let lowerBoundElevationRange = document.getElementById("elevationLowerBound").value;
-                let upperBoundElevationRange = document.getElementById("elevationUpperBound").value;
-                let lowerBoundDist = document.getElementById("distanceLowerBound").value;
-                let upperBoundDist = document.getElementById("distanceUpperBound").value;
+            {% if filter_button %}
+                document.getElementById("applyFiltersButton").addEventListener("click", function(){
+                    console.log("apply filters button clicked")
+                    let lowerBoundElevationRange = document.getElementById("elevationLowerBound").value;
+                    let upperBoundElevationRange = document.getElementById("elevationUpperBound").value;
+                    let lowerBoundDist = document.getElementById("distanceLowerBound").value;
+                    let upperBoundDist = document.getElementById("distanceUpperBound").value;
 
-                if (lowerBoundElevationRange <= 0 || isNaN(lowerBoundElevationRange) || lowerBoundElevationRange >= upperBoundElevationRange) {
-                    lowerBoundElevationRange = 0;
-                }
-
-                if (lowerBoundDist <= 0 || isNaN(lowerBoundDist) || lowerBoundDist >= upperBoundDist) {
-                    lowerBoundDist = 0;
-                }
-
-                if (isNaN(upperBoundElevationRange) || upperBoundElevationRange == "") {
-                    upperBoundElevationRange = Number.MAX_SAFE_INTEGER;
-                }
-
-                if (isNaN(upperBoundDist) || upperBoundDist == "") {
-                    upperBoundDist = Number.MAX_SAFE_INTEGER;
-                }
-
-                console.log("lowerBoundElevationRange: " + lowerBoundElevationRange);
-                console.log("upperBoundElevationRange: " + upperBoundElevationRange);
-                console.log("lowerBoundDist: " + lowerBoundDist);
-                console.log("upperBoundDist: " + upperBoundDist);
-
-                rsp = [];
-                // filter routes by distance and elevation difference
-                for (let i = 0; i < rsp_original.length; i++) {
-                    if (rsp_original[i][3] > lowerBoundDist && rsp_original[i][3] < upperBoundDist && rsp_original[i][4] > lowerBoundElevationRange && rsp_original[i][4] < upperBoundElevationRange) {
-                        rsp.push(rsp_original[i]);
-                        console.log("pushing route at index " + i + " with distance " + rsp_original[i][3] + " and gradient difference " + rsp_original[i][4])
+                    if (lowerBoundElevationRange <= 0 || isNaN(lowerBoundElevationRange) || lowerBoundElevationRange >= upperBoundElevationRange) {
+                        lowerBoundElevationRange = 0;
                     }
-                }
-                document.getElementById("numRoutesText").innerHTML = rsp.length + " routes displayed after filtering";
 
-                clearMarkers(); // clear the markers
-                addMarkersFromRsp(rsp); // add back the markers we want
-            });
+                    if (lowerBoundDist <= 0 || isNaN(lowerBoundDist) || lowerBoundDist >= upperBoundDist) {
+                        lowerBoundDist = 0;
+                    }
+
+                    if (isNaN(upperBoundElevationRange) || upperBoundElevationRange == "") {
+                        upperBoundElevationRange = Number.MAX_SAFE_INTEGER;
+                    }
+
+                    if (isNaN(upperBoundDist) || upperBoundDist == "") {
+                        upperBoundDist = Number.MAX_SAFE_INTEGER;
+                    }
+
+                    console.log("lowerBoundElevationRange: " + lowerBoundElevationRange);
+                    console.log("upperBoundElevationRange: " + upperBoundElevationRange);
+                    console.log("lowerBoundDist: " + lowerBoundDist);
+                    console.log("upperBoundDist: " + upperBoundDist);
+
+                    rsp = [];
+                    // filter routes by distance and elevation difference
+                    for (let i = 0; i < rsp_original.length; i++) {
+                        if (rsp_original[i][3] > lowerBoundDist && rsp_original[i][3] < upperBoundDist && rsp_original[i][4] > lowerBoundElevationRange && rsp_original[i][4] < upperBoundElevationRange) {
+                            rsp.push(rsp_original[i]);
+                            console.log("pushing route at index " + i + " with distance " + rsp_original[i][3] + " and gradient difference " + rsp_original[i][4])
+                        }
+                    }
+                    document.getElementById("numRoutesText").innerHTML = rsp.length + " routes displayed after filtering";
+
+                    clearMarkers(); // clear the markers
+                    addMarkersFromRsp(rsp); // add back the markers we want
+                });
+            {% endif %}
+            
             // add back the markers we want
             addMarkersFromRsp(rsp);
         {% else %}
@@ -422,6 +438,20 @@ document.getElementById('showLandmarksButton').addEventListener('click', functio
                     mark.setMap(null);
                     if(newRouteStops.length < 2){
                         document.getElementById("finish-route").style.display = "none";
+                        document.getElementById("distance").style.display = "none";
+                        document.getElementById("elevation_chart").style.display = "none";
+                        if(polyLine != null){
+                            directionsRenderer.setMap(null);
+                            directionsRenderer = null;
+                            directionsRenderer = new google.maps.DirectionsRenderer({suppressMarkers: window.location.href.includes("create") ? true : false});
+                            
+                            polyLine.setMap(null);
+                            polyLine = null;
+                            
+
+                            console.log("polyline removed");
+                            console.log(polyLine);
+                        }
                     }
                     else{
                         let waypoints = [];

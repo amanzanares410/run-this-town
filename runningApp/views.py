@@ -35,17 +35,17 @@ def logged_in_view(request):
         admin_group.user_set.add(request.user)
     if request.user.groups.filter(name='Admins').exists():
         # User is an admin
-        return render(request=request, template_name="runningApp/logged_in_admin.html", context={"GOOGLE_MAPS_API_KEY": settings.GOOGLE_MAPS_API_KEY, "route_start_points": route_start_points })
+        return render(request=request, template_name="runningApp/logged_in_admin.html", context={"GOOGLE_MAPS_API_KEY": settings.GOOGLE_MAPS_API_KEY, "route_start_points": route_start_points, "filter_button": True })
     else:
         # User is a regular user
-        return render(request=request, template_name="runningApp/logged_in.html", context={"GOOGLE_MAPS_API_KEY": settings.GOOGLE_MAPS_API_KEY, "route_start_points": route_start_points })
+        return render(request=request, template_name="runningApp/logged_in.html", context={"GOOGLE_MAPS_API_KEY": settings.GOOGLE_MAPS_API_KEY, "route_start_points": route_start_points, "filter_button": True})
 
 def logout_view(request):
     logout(request)
     return redirect('index')
 
 def create_route(request):
-    return render(request=request, template_name="runningApp/create_route.html", context={"GOOGLE_MAPS_API_KEY": settings.GOOGLE_MAPS_API_KEY})
+    return render(request=request, template_name="runningApp/create_route.html", context={"GOOGLE_MAPS_API_KEY": settings.GOOGLE_MAPS_API_KEY, "filter_button": False})
 
 # def map_view(request):
 #     return render(request, template_name="runningApp/map.html")
@@ -108,6 +108,7 @@ class Route_Detail(LoginRequiredMixin, DetailView):
         context["GOOGLE_MAPS_API_KEY"] = settings.GOOGLE_MAPS_API_KEY
         context["route_start_points"] = route_start_points
         context["current_stops"] = current_stops
+        context["filter_button"] = False
         return context
     
     
