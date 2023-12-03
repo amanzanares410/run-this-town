@@ -244,7 +244,7 @@
     let map;
     let newRouteStops;
     const directionsService = new google.maps.DirectionsService();
-    let directionsRenderer = new google.maps.DirectionsRenderer();
+    let directionsRenderer = new google.maps.DirectionsRenderer({suppressMarkers: true});
 
     if(window.location.href.includes("create")){
         newRouteStops = [];
@@ -443,7 +443,7 @@ document.getElementById('showLandmarksButton').addEventListener('click', functio
                         if(polyLine != null){
                             directionsRenderer.setMap(null);
                             directionsRenderer = null;
-                            directionsRenderer = new google.maps.DirectionsRenderer();
+                            directionsRenderer = new google.maps.DirectionsRenderer({suppressMarkers: true});
                             
                             polyLine.setMap(null);
                             polyLine = null;
