@@ -85,6 +85,7 @@
             <p class="user-routes-title">{{ user.username | upper }}'s ROUTES:</p>
             <div class="routes-container">
                 {% for route in user.route_set.all %}
+                    {% if route.approved %}
                     <div class="route-box">
                         <div class="route-name">{{ route.route_name }}</div>
                         <div class="route-description">{{ route.route_description }}</div>
@@ -94,6 +95,7 @@
                             <a href="{% url 'route_detail' route.id %}" class="view-route">View Route</a>
                         </div>
                     </div>
+                    {% endif %}
                 {% empty %}
                     <p>This user has no routes.</p>
                 {% endfor %}
