@@ -55,16 +55,19 @@ button {
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+    box-shadow: 1px 1px 1px 1px gray;
 }
 
 /* button:hover {
 } */
 
-/* #go-to-app-button:hover {
+#go-to-app-button:hover {
     border-color: var(--orange-hover);
-} */
+    cursor: pointer;
+    box-shadow: none;
+}
 
-#google-sign-in-button img:hover {
+/* #google-sign-in-button img:hover {
     filter: brightness(75%);
 }
 
@@ -76,4 +79,4 @@ button {
 
 #google-sign-in-button:hover {
     cursor: pointer;
-}
+} */

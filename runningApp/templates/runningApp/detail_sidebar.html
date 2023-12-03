@@ -1,11 +1,45 @@
+<script>
+    function goBack(){
+        // console.log(typeof document.referrer); 
+        if(document.referrer.includes("create")){
+            window.location = document.referrer;
+        }
+        else {
+            window.history.back();
+        }
+    }
+</script>
+
 {% if object %}
     <div id="detail-viewer" class="flex-column">
         <div id="title-bar" class="flex-row">
             {{ object.route_name }}
-            <a href = {% url "logged_in_view" %} id="close">X</a>
+            {% comment %} 
+            Citation
+            * Title: Href navigate to previous page
+            * Purpose: used these two posts to figure out how to go back to previous page from a/refresh sometimes
+            * URL: https://stackoverflow.com/a/8814534, https://stackoverflow.com/a/35547598
+            {% endcomment %}
+            <a href = "#" onclick="goBack();" id="close">X</a> {% comment "" %}javascript:history.back(){% endcomment %}
         </div>
+        {% if "Admin" in user.groups.all.0.name %}
+            <div class="forms flex-row fill">
+                {% if not object.approved %}
+                    <form action = {% url "approve" %} method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="route_id" value="{{ object.id }}">
+                        <input class="action-btn" type="submit" value="Approve">
+                    </form>
+                {% endif %}
+                <form action = {% url "delete" %} method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="route_id" value="{{ object.id }}">
+                    <input class="action-btn" type="submit" value="Delete">
+                </form>
+            </div>
+        {% endif %}
         <div class="flex-column fill">
-            {{ object.route_description }}
+            {{ object.route_description }}  
         </div>
         <div id="display-container" class="flex-column fill">
             <div id="elevation_chart" class="flex-column fill">
@@ -19,6 +53,31 @@
 {% endif %}
 
 <style>
+
+    .action-btn {
+        background-color: var(--dark-grey);
+        color: white;
+        border: 1px solid white;
+        padding: 1vh 1vw;
+        border-radius: 10px;
+        box-shadow: 0 0 10px 0 var(--orange);
+    }
+
+    .action-btn:hover {
+        color: white;
+        cursor: pointer;
+        box-shadow: none;
+    }
+
+    .forms{
+        gap: 1vh;
+    }
+
+    .forms .action-btn{ 
+        width: 10cqw;
+        height: 6cqh;
+    }
+    
     #detail-viewer {
         position: absolute;
         top: 8vh;
