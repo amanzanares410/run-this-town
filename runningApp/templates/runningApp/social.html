@@ -91,7 +91,7 @@
                         <div class="route-description">{{ route.route_description }}</div>
                         <div class="route-distance">Distance: {{ route.distance|floatformat:2 }}mi</div>
                         <div class="route-actions">
-                            <button class="heart-button" data-user="{{ user.username }}" data-route="{{ route.route_name }}">❤️</button>
+                            <button class="heart-button" data-id="{{route.id}}" data-user="{{ user.username }}" data-route="{{ route.route_name }}">❤️</button>
                             <a href="{% url 'route_detail' route.id %}" class="view-route">View Route</a>
                         </div>
                     </div>
@@ -122,9 +122,12 @@
         if (savedRoutesData) {
             const parsedData = JSON.parse(savedRoutesData);
             parsedData.forEach(routeKey => {
-                const [user, route] = routeKey.split("-");
+                const [user, route, id] = routeKey.split("-");
                 const listItem = document.createElement("li");
-                listItem.textContent = `${user}'s ${route}`;
+                const link = document.createElement("a");
+                link.href = "{% url 'route_detail' 0 %}".replace("0", id);
+                link.textContent = `${user}'s ${route}`;
+                listItem.appendChild(link);
                 listItem.setAttribute("data-key", routeKey);
                 savedRoutes.add(routeKey);
                 savedRoutesList.appendChild(listItem);
@@ -135,7 +138,8 @@
             button.addEventListener("click", function() {
                 const user = this.getAttribute("data-user");
                 const route = this.getAttribute("data-route");
-                const routeKey = `${user}-${route}`;
+                const id = this.getAttribute("data-id");
+                const routeKey = `${user}-${route}-${id}`;
                 const listItem = savedRoutesList.querySelector(`li[data-key="${routeKey}"]`);
 
                 if (savedRoutes.has(routeKey)) {
@@ -144,7 +148,10 @@
                     this.classList.remove("active");
                 } else {
                     const newListItem = document.createElement("li");
-                    newListItem.textContent = `${user}'s ${route}`;
+                    const link = document.createElement("a");
+                    link.href = "{% url 'route_detail' 0 %}".replace("0", id);
+                    link.textContent = `${user}'s ${route}`;
+                    newListItem.appendChild(link);
                     newListItem.setAttribute("data-key", routeKey);
                     savedRoutes.add(routeKey);
                     savedRoutesList.appendChild(newListItem);
