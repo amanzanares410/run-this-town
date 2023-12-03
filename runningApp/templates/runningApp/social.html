@@ -75,7 +75,7 @@
 {% block page_content %}
 <div class="top-search-bar">
   <form method="get" id="friend-search-form">
-    <input type="text" name="friend-search" placeholder="Search for friends">
+    <input type="text" name="friend-search" placeholder="Enter an email to search for friends">
     <button type="submit">Search</button>
   </form>
 </div>
@@ -85,15 +85,17 @@
             <p class="user-routes-title">{{ user.username | upper }}'s ROUTES:</p>
             <div class="routes-container">
                 {% for route in user.route_set.all %}
+                    {% if route.approved %}
                     <div class="route-box">
                         <div class="route-name">{{ route.route_name }}</div>
                         <div class="route-description">{{ route.route_description }}</div>
-                        <div class="route-distance">Distance: {{ route.distance }}</div>
+                        <div class="route-distance">Distance: {{ route.distance|floatformat:2 }}mi</div>
                         <div class="route-actions">
-                            <button class="heart-button" data-user="{{ user.username }}" data-route="{{ route.route_name }}">❤️</button>
+                            <button class="heart-button" data-id="{{route.id}}" data-user="{{ user.username }}" data-route="{{ route.route_name }}">❤️</button>
                             <a href="{% url 'route_detail' route.id %}" class="view-route">View Route</a>
                         </div>
                     </div>
+                    {% endif %}
                 {% empty %}
                     <p>This user has no routes.</p>
                 {% endfor %}
@@ -120,9 +122,12 @@
         if (savedRoutesData) {
             const parsedData = JSON.parse(savedRoutesData);
             parsedData.forEach(routeKey => {
-                const [user, route] = routeKey.split("-");
+                const [user, route, id] = routeKey.split("-");
                 const listItem = document.createElement("li");
-                listItem.textContent = `${user}'s ${route}`;
+                const link = document.createElement("a");
+                link.href = "{% url 'route_detail' 0 %}".replace("0", id);
+                link.textContent = `${user}'s ${route}`;
+                listItem.appendChild(link);
                 listItem.setAttribute("data-key", routeKey);
                 savedRoutes.add(routeKey);
                 savedRoutesList.appendChild(listItem);
@@ -133,7 +138,8 @@
             button.addEventListener("click", function() {
                 const user = this.getAttribute("data-user");
                 const route = this.getAttribute("data-route");
-                const routeKey = `${user}-${route}`;
+                const id = this.getAttribute("data-id");
+                const routeKey = `${user}-${route}-${id}`;
                 const listItem = savedRoutesList.querySelector(`li[data-key="${routeKey}"]`);
 
                 if (savedRoutes.has(routeKey)) {
@@ -142,7 +148,10 @@
                     this.classList.remove("active");
                 } else {
                     const newListItem = document.createElement("li");
-                    newListItem.textContent = `${user}'s ${route}`;
+                    const link = document.createElement("a");
+                    link.href = "{% url 'route_detail' 0 %}".replace("0", id);
+                    link.textContent = `${user}'s ${route}`;
+                    newListItem.appendChild(link);
                     newListItem.setAttribute("data-key", routeKey);
                     savedRoutes.add(routeKey);
                     savedRoutesList.appendChild(newListItem);
