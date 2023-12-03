@@ -75,7 +75,7 @@
 {% block page_content %}
 <div class="top-search-bar">
   <form method="get" id="friend-search-form">
-    <input type="text" name="friend-search" placeholder="Search for friends">
+    <input type="text" name="friend-search" placeholder="Enter an email to search for friends">
     <button type="submit">Search</button>
   </form>
 </div>
@@ -85,6 +85,7 @@
             <p class="user-routes-title">{{ user.username | upper }}'s ROUTES:</p>
             <div class="routes-container">
                 {% for route in user.route_set.all %}
+                    {% if route.approved %}
                     <div class="route-box">
                         <div class="route-name">{{ route.route_name }}</div>
                         <div class="route-description">{{ route.route_description }}</div>
@@ -94,6 +95,7 @@
                             <a href="{% url 'route_detail' route.id %}" class="view-route">View Route</a>
                         </div>
                     </div>
+                    {% endif %}
                 {% empty %}
                     <p>This user has no routes.</p>
                 {% endfor %}
