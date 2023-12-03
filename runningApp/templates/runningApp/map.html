@@ -95,6 +95,7 @@
     // @ts-ignore TODO update to newest visualization library
     google.load("visualization", "1", { packages: ["columnchart"] });
     let markers = [];
+    let polyLine = null;
 
     /**
     * CITATION
@@ -103,13 +104,21 @@
     * URL: https://developers.google.com/maps/documentation/javascript/examples/elevation-paths#maps_elevation_paths-javascript
     */
     function displayPathElevation(path, elevator, map) {
-        // Display a polyline of the elevation path.
-        new google.maps.Polyline({
-          path: path,
-          strokeColor: "#0000CC",
-          strokeOpacity: 0.4,
-          map: map,
-        });
+        directionsRenderer.setMap(map);
+        if (polyLine == null){
+            polyLine = // Display a polyline of the elevation path.
+                new google.maps.Polyline({
+                    path: path,
+                    strokeColor: "#0000CC",
+                    strokeOpacity: 0.4,
+                    map: map,
+                });
+            console.log("polyline created");
+        }
+        else{
+            polyLine.setPath(path);
+        }
+        
         // Create a PathElevationRequest object using this array.
         // Ask for 256 samples along that path.
         // Initiate the path request.
@@ -235,7 +244,7 @@
     let map;
     let newRouteStops;
     const directionsService = new google.maps.DirectionsService();
-    const directionsRenderer = new google.maps.DirectionsRenderer();
+    let directionsRenderer = new google.maps.DirectionsRenderer();
 
     if(window.location.href.includes("create")){
         newRouteStops = [];
@@ -429,6 +438,20 @@ document.getElementById('showLandmarksButton').addEventListener('click', functio
                     mark.setMap(null);
                     if(newRouteStops.length < 2){
                         document.getElementById("finish-route").style.display = "none";
+                        document.getElementById("distance").style.display = "none";
+                        document.getElementById("elevation_chart").style.display = "none";
+                        if(polyLine != null){
+                            directionsRenderer.setMap(null);
+                            directionsRenderer = null;
+                            directionsRenderer = new google.maps.DirectionsRenderer();
+                            
+                            polyLine.setMap(null);
+                            polyLine = null;
+                            
+
+                            console.log("polyline removed");
+                            console.log(polyLine);
+                        }
                     }
                     else{
                         let waypoints = [];
