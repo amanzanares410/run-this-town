@@ -7,7 +7,9 @@
 <div id="map" class="full-height"></div>
 <div id="buttonContainer" class="flex-column">
     <button id="showLandmarksButton" class="show-landmarks-button">Show Major Landmarks</button>
-    <button id="showFilterButton" >Filter Routes</button>
+    {% if  filter_button%}
+        <button id="showFilterButton" >Filter Routes</button>
+    {% endif %}   
 
 </div>
 
@@ -79,14 +81,16 @@
 <input id="route_distance" name="route_distance" value="" hidden>
 
 <script>
-
-    document.getElementById("showFilterButton").addEventListener("click", function(){
-        if (document.getElementById("filtersWindow").hidden) {
-            document.getElementById("filtersWindow").hidden = false;
-        } else {
-            document.getElementById("filtersWindow").hidden = true;
-        }
-    });
+    {% if filter_button %}
+        document.getElementById("showFilterButton").addEventListener("click", function(){
+            if (document.getElementById("filtersWindow").hidden) {
+                document.getElementById("filtersWindow").hidden = false;
+            } else {
+                document.getElementById("filtersWindow").hidden = true;
+            }
+        });
+    {% endif %}
+    
     // Load the Visualization API and the columnchart package.
     // @ts-ignore TODO update to newest visualization library
     google.load("visualization", "1", { packages: ["columnchart"] });
@@ -333,47 +337,50 @@ document.getElementById('showLandmarksButton').addEventListener('click', functio
             }
             document.getElementById("numRoutesText").innerHTML = rsp.length + " routes displayed";
             
-            document.getElementById("applyFiltersButton").addEventListener("click", function(){
-                console.log("apply filters button clicked")
-                let lowerBoundElevationRange = document.getElementById("elevationLowerBound").value;
-                let upperBoundElevationRange = document.getElementById("elevationUpperBound").value;
-                let lowerBoundDist = document.getElementById("distanceLowerBound").value;
-                let upperBoundDist = document.getElementById("distanceUpperBound").value;
+            {% if filter_button %}
+                document.getElementById("applyFiltersButton").addEventListener("click", function(){
+                    console.log("apply filters button clicked")
+                    let lowerBoundElevationRange = document.getElementById("elevationLowerBound").value;
+                    let upperBoundElevationRange = document.getElementById("elevationUpperBound").value;
+                    let lowerBoundDist = document.getElementById("distanceLowerBound").value;
+                    let upperBoundDist = document.getElementById("distanceUpperBound").value;
 
-                if (lowerBoundElevationRange <= 0 || isNaN(lowerBoundElevationRange) || lowerBoundElevationRange >= upperBoundElevationRange) {
-                    lowerBoundElevationRange = 0;
-                }
-
-                if (lowerBoundDist <= 0 || isNaN(lowerBoundDist) || lowerBoundDist >= upperBoundDist) {
-                    lowerBoundDist = 0;
-                }
-
-                if (isNaN(upperBoundElevationRange) || upperBoundElevationRange == "") {
-                    upperBoundElevationRange = Number.MAX_SAFE_INTEGER;
-                }
-
-                if (isNaN(upperBoundDist) || upperBoundDist == "") {
-                    upperBoundDist = Number.MAX_SAFE_INTEGER;
-                }
-
-                console.log("lowerBoundElevationRange: " + lowerBoundElevationRange);
-                console.log("upperBoundElevationRange: " + upperBoundElevationRange);
-                console.log("lowerBoundDist: " + lowerBoundDist);
-                console.log("upperBoundDist: " + upperBoundDist);
-
-                rsp = [];
-                // filter routes by distance and elevation difference
-                for (let i = 0; i < rsp_original.length; i++) {
-                    if (rsp_original[i][3] > lowerBoundDist && rsp_original[i][3] < upperBoundDist && rsp_original[i][4] > lowerBoundElevationRange && rsp_original[i][4] < upperBoundElevationRange) {
-                        rsp.push(rsp_original[i]);
-                        console.log("pushing route at index " + i + " with distance " + rsp_original[i][3] + " and gradient difference " + rsp_original[i][4])
+                    if (lowerBoundElevationRange <= 0 || isNaN(lowerBoundElevationRange) || lowerBoundElevationRange >= upperBoundElevationRange) {
+                        lowerBoundElevationRange = 0;
                     }
-                }
-                document.getElementById("numRoutesText").innerHTML = rsp.length + " routes displayed after filtering";
 
-                clearMarkers(); // clear the markers
-                addMarkersFromRsp(rsp); // add back the markers we want
-            });
+                    if (lowerBoundDist <= 0 || isNaN(lowerBoundDist) || lowerBoundDist >= upperBoundDist) {
+                        lowerBoundDist = 0;
+                    }
+
+                    if (isNaN(upperBoundElevationRange) || upperBoundElevationRange == "") {
+                        upperBoundElevationRange = Number.MAX_SAFE_INTEGER;
+                    }
+
+                    if (isNaN(upperBoundDist) || upperBoundDist == "") {
+                        upperBoundDist = Number.MAX_SAFE_INTEGER;
+                    }
+
+                    console.log("lowerBoundElevationRange: " + lowerBoundElevationRange);
+                    console.log("upperBoundElevationRange: " + upperBoundElevationRange);
+                    console.log("lowerBoundDist: " + lowerBoundDist);
+                    console.log("upperBoundDist: " + upperBoundDist);
+
+                    rsp = [];
+                    // filter routes by distance and elevation difference
+                    for (let i = 0; i < rsp_original.length; i++) {
+                        if (rsp_original[i][3] > lowerBoundDist && rsp_original[i][3] < upperBoundDist && rsp_original[i][4] > lowerBoundElevationRange && rsp_original[i][4] < upperBoundElevationRange) {
+                            rsp.push(rsp_original[i]);
+                            console.log("pushing route at index " + i + " with distance " + rsp_original[i][3] + " and gradient difference " + rsp_original[i][4])
+                        }
+                    }
+                    document.getElementById("numRoutesText").innerHTML = rsp.length + " routes displayed after filtering";
+
+                    clearMarkers(); // clear the markers
+                    addMarkersFromRsp(rsp); // add back the markers we want
+                });
+            {% endif %}
+            
             // add back the markers we want
             addMarkersFromRsp(rsp);
         {% else %}
